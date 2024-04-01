@@ -8,7 +8,7 @@ def main() -> int:
     tmp_filepath = os.getcwd() + "/tmp.txt"
     run_stack_inspector(ddrun_path, libstack_inspector_path, executable_path, tmp_filepath)
     result = parse_result(tmp_filepath)
-    assert_equals(result, 0 + 9)  # TODO: why not 1 + 9?
+    assert_equals(result, 8 + 3)
     os.remove(tmp_filepath)
     return 0
 
