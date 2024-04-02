@@ -18,9 +18,7 @@ set(DRRUN_EXECUTABLE ${DYNAMORIO_HOME}/bin64/drrun)
 enable_testing()
 add_subdirectory(stack-inspector)
 
-# TODO: make alloc-inspector depend on stack-inspector
 add_executable(alloc-inspector src/main.cpp)
-#add_dependencies(alloc-inspector stack-inspector)
 target_include_directories(alloc-inspector PUBLIC include)
 target_compile_definitions(alloc-inspector
     PUBLIC DRRUN_EXECUTABLE="${DRRUN_EXECUTABLE}"
