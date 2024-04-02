@@ -10,7 +10,7 @@ function(add_integration_pytest SOURCE_NAME)
     add_test(NAME ${TEST_NAME}
             COMMAND ${Python_EXECUTABLE}
             ${CMAKE_CURRENT_SOURCE_DIR}/python/${SOURCE_NAME}
-            ${DYNAMORIO_HOME}/bin64/drrun ${STACK_INSPECTOR_LOC}
+            ${DRRUN_EXECUTABLE} ${STACK_INSPECTOR_LOC}
             ${TEST_EXEC_LOC})
 endfunction(add_integration_pytest)
 
@@ -20,7 +20,6 @@ if (PYTHON_FOUND)
         get_filename_component(FILE_NAME ${FILE} NAME)
         add_integration_pytest(${FILE_NAME})
     endforeach()
-    enable_testing()
 else ()
     message("Python was not found. Starting without testing.")
 endif ()
