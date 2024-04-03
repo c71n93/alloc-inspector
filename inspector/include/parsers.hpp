@@ -2,6 +2,7 @@
 
 #include <cstdio>
 #include <stdexcept>
+#include "utils.hpp"
 
 namespace inspector::parser {
 
@@ -9,15 +10,16 @@ class format_error : public std::logic_error {
 public:
     format_error(const char* msg) : std::logic_error(msg) {}
     format_error(const std::string& msg) : std::logic_error(msg) {}
+    virtual ~format_error() {}
 };
 
-class stack_inspector_out_format_error : format_error {
+class stack_inspector_out_format_error final : format_error {
 public:
     stack_inspector_out_format_error(const char* msg) : format_error(msg) {}
     stack_inspector_out_format_error(const std::string& msg) : format_error(msg) {}
 };
 
-class valgrind_out_format_error : format_error {
+class valgrind_out_format_error final : format_error {
 public:
     valgrind_out_format_error(const char* msg) : format_error(msg) {}
     valgrind_out_format_error(const std::string& msg) : format_error(msg) {}
@@ -54,9 +56,18 @@ public:
 
 private:
     void parse_stack_inspector() {
+        std::string info;
+        try {
+            info = obtain_line_from_string_that_starts_with(
+                    output_.stack_inspector_output,
+                    "Instrumentation results:"
+            );
+        } catch (const std::invalid_argument& e) {
+            throw stack_inspector_out_format_error(e.what());
+        }
         if (
             sscanf(
-                output_.stack_inspector_output.c_str(),
+                info.c_str(),
                 "Instrumentation results: %lu", &stack_allocs_
             ) == 0
         ) {
@@ -68,17 +79,15 @@ private:
     }
 
     void parse_valgrind() {
-        size_t begin = output_.valgrind_output.find("total heap usage:");
-        size_t end = begin;
-        if (begin == std::string::npos) {
-            throw valgrind_out_format_error(
-                "Wrong format of valgrind result output. Unable to find \"total heap usage\"."
+        std::string info;
+        try {
+            info = obtain_line_from_string_that_starts_with(
+                    output_.valgrind_output,
+                    "total heap usage:"
             );
+        } catch (const std::invalid_argument& e) {
+            throw stack_inspector_out_format_error(e.what());
         }
-        while (output_.valgrind_output[end] != '\n' && end < output_.valgrind_output.size()) {
-            end++;
-        }
-        std::string info = output_.valgrind_output.substr(begin, end - begin);
         if (
             sscanf(
                 info.c_str(),
@@ -90,6 +99,26 @@ private:
                     "Unable to read total heap usage."
             );
         }
+    }
+
+    static std::string obtain_line_from_string_that_starts_with(
+            const std::string& str, const std::string& starts_with
+    ) {
+        size_t begin = str.find(starts_with);
+        size_t end = begin;
+        if (begin == std::string::npos) {
+            throw std::invalid_argument(
+                utils::string_format(
+                    "There is no such line that starts with \"%s\" in the string:\n %s",
+                    starts_with.c_str(),
+                    str.c_str()
+                )
+            );
+        }
+        while (str[end] != '\n' && end < str.size()) {
+            end++;
+        }
+        return str.substr(begin, end - begin + 1);
     }
 
     const inspectors_output output_;
