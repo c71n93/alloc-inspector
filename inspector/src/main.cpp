@@ -1,8 +1,10 @@
 #include <iostream>
 #include "utils.hpp"
+#include "parsers.hpp"
 
 using inspector::utils::exec;
 using inspector::utils::string_format;
+using inspector::parser::parsed_inspectors_output;
 
 int main(int argc, char* argv[]) {
     if (argc != 2) {
@@ -15,15 +17,18 @@ int main(int argc, char* argv[]) {
     if (true) {
         only_from_app_opt = "-only_from_app";
     }
-    std::cout <<
-        exec(string_format(
+    parsed_inspectors_output::inspectors_result result = parsed_inspectors_output(
+        exec(
+            string_format(
                 "%s -c %s %s -- %s",
                 DRRUN_EXECUTABLE,
                 STACK_INSPECTOR,
                 only_from_app_opt.c_str(),
-                executable.c_str())
-        )
-        << std::endl;
-    std::cout << exec(string_format("valgrind %s", executable.c_str())) << std::endl;
+                executable.c_str()
+            )
+        ),
+        exec(string_format("valgrind %s 2>&1", executable.c_str()))
+    ).parse_and_take();
+    std::cout << result << std::endl;
     return 0;
 }
