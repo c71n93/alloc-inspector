@@ -13,13 +13,13 @@ public:
     virtual ~format_error() {}
 };
 
-class stack_inspector_out_format_error final : format_error {
+class stack_inspector_out_format_error final : public format_error {
 public:
     stack_inspector_out_format_error(const char* msg) : format_error(msg) {}
     stack_inspector_out_format_error(const std::string& msg) : format_error(msg) {}
 };
 
-class valgrind_out_format_error final : format_error {
+class valgrind_out_format_error final : public format_error {
 public:
     valgrind_out_format_error(const char* msg) : format_error(msg) {}
     valgrind_out_format_error(const std::string& msg) : format_error(msg) {}
@@ -65,6 +65,7 @@ private:
         } catch (const std::invalid_argument& e) {
             throw stack_inspector_out_format_error(e.what());
         }
+
         if (
             sscanf(
                 info.c_str(),
@@ -86,7 +87,7 @@ private:
                     "total heap usage:"
             );
         } catch (const std::invalid_argument& e) {
-            throw stack_inspector_out_format_error(e.what());
+            throw valgrind_out_format_error(e.what());
         }
         if (
             sscanf(
