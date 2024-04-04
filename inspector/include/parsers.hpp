@@ -38,10 +38,14 @@ public:
 
         const size_t stack_allocs;
         const size_t heap_allocs;
-        const double stack_allocs_fraction =
+        const double stack_allocs_fraction = stack_allocs + heap_allocs == 0? 0 :
                 static_cast<double>(stack_allocs) / static_cast<double>(stack_allocs + heap_allocs);
-        double heap_allocs_fraction =
+        double heap_allocs_fraction = stack_allocs + heap_allocs == 0? 0 :
                 static_cast<double>(heap_allocs) / static_cast<double>(stack_allocs + heap_allocs);
+
+        std::string as_csv() {
+            return utils::string_format("%lu,%lu,%lf,%lf", stack_allocs, heap_allocs, stack_allocs_fraction, heap_allocs_fraction);
+        }
     };
 
     parsed_inspectors_output(

@@ -20,7 +20,12 @@ std::string exec(const std::string &cmd) {
     return result;
 }
 
-std::string string_format(const std::string &format, std::same_as<const char *> auto ... args) {
+template<typename T>
+concept formattable =
+        std::is_fundamental<T>::value ||
+        (std::is_pointer<T>::value && std::is_fundamental<std::remove_pointer_t<T>>::value);
+
+std::string string_format(const std::string &format, formattable auto ... args) {
     int size_s = std::snprintf(nullptr, 0, format.c_str(), args ...) + 1; // Extra space for '\0'
     if (size_s <= 0) {
         throw std::runtime_error("error during formatting.");

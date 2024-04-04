@@ -3,24 +3,11 @@ project(inspector)
 
 set(CMAKE_CXX_STANDARD 20)
 
-if(NOT DEFINED DYNAMORIO_HOME)
-    if(DEFINED ENV{DYNAMORIO_HOME})
-        set(DYNAMORIO_HOME $ENV{DYNAMORIO_HOME})
-    else()
-        message(
-                FATAL_ERROR
-                "The DYNAMORIO_HOME variable must be specified via -D or via the environment variable of the same name"
-        )
-    endif()
-endif(NOT DEFINED DYNAMORIO_HOME)
-set(DRRUN_EXECUTABLE ${DYNAMORIO_HOME}/bin64/drrun)
-
 enable_testing()
 add_subdirectory(stack-inspector)
 
-add_executable(alloc-inspector src/main.cpp)
-target_include_directories(alloc-inspector PUBLIC include)
-target_compile_definitions(alloc-inspector
-    PUBLIC DRRUN_EXECUTABLE="${DRRUN_EXECUTABLE}"
-    PUBLIC STACK_INSPECTOR="$<TARGET_FILE:stack_inspector>"
+add_executable(alloc_inspector src/main.cpp)
+target_include_directories(alloc_inspector PUBLIC include)
+target_compile_definitions(alloc_inspector
+    PUBLIC STACK_INSPECTOR_EXEC="$<TARGET_FILE:stack_inspector_exec>"
 )

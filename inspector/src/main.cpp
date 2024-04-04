@@ -8,21 +8,16 @@ using inspector::parser::parsed_inspectors_output;
 
 int main(int argc, char* argv[]) {
     if (argc != 2) {
-        std::cout << "error: wrong argument number: executable file is required" << std::endl;
+        std::cerr << "error: wrong argument number: executable file is required" << std::endl;
         return 1;
     }
     std::string executable = std::string(argv[1]);
-    // TODO: add possibility to pass "-only_from_app" flag as an argument
-    std::string only_from_app_opt = "";
-    if (true) {
-        only_from_app_opt = "-only_from_app";
-    }
+    // TODO: add possibility to pass "-csv_result" flag as an argument
+    bool csv_result = true;
     std::string stack_inspector_output = exec(
             string_format(
-                    "%s -c %s %s -- %s",
-                    DRRUN_EXECUTABLE,
-                    STACK_INSPECTOR,
-                    only_from_app_opt.c_str(),
+                    "%s %s",
+                    STACK_INSPECTOR_EXEC,
                     executable.c_str()
             )
     );
@@ -34,7 +29,11 @@ int main(int argc, char* argv[]) {
             stack_inspector_output,
             valgrind_output
         ).parse_and_take();
-        std::cout << result << std::endl;
+        if (csv_result) {
+            std::cout << result.as_csv() << std::endl;
+        } else {
+            std::cout << result << std::endl;
+        }
     } catch (const inspector::parser::stack_inspector_out_format_error& e) {
         std::cerr << "error: unexpected output from stack_inspector:\n"
                   << stack_inspector_output << "\n"
