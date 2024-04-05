@@ -2,6 +2,8 @@
 
 #include <cstdio>
 #include <stdexcept>
+#include <sstream>
+#include <algorithm>
 #include "utils.hpp"
 
 namespace inspector::parser {
@@ -33,33 +35,56 @@ public:
     };
 
     struct inspectors_result {
-        inspectors_result(size_t stack_allocs, size_t heap_allocs) :
-            stack_allocs(stack_allocs), heap_allocs(heap_allocs) {}
+        struct valgrind_result {
+            explicit
+            valgrind_result(size_t heap_allocs = 0, size_t heap_frees = 0, size_t heap_memory = 0)
+                : heap_allocs(heap_allocs), heap_frees(heap_frees), heap_memory(heap_memory) {}
 
-        const size_t stack_allocs;
-        const size_t heap_allocs;
-        const double stack_allocs_fraction = stack_allocs + heap_allocs == 0? 0 :
-                static_cast<double>(stack_allocs) / static_cast<double>(stack_allocs + heap_allocs);
-        double heap_allocs_fraction = stack_allocs + heap_allocs == 0? 0 :
-                static_cast<double>(heap_allocs) / static_cast<double>(stack_allocs + heap_allocs);
+            const size_t heap_allocs;
+            const size_t heap_frees;
+            const size_t heap_memory;
+            const double avg_heap_alloc_sz = heap_memory == 0? 0 :
+                static_cast<double>(heap_memory) / static_cast<double>(heap_allocs);
+        };
+
+        explicit inspectors_result(
+            size_t stack_allocs = 0,
+            valgrind_result valgrind = valgrind_result{}
+        ) : stack_allocs(stack_allocs), valgrind(valgrind) {}
+
+        const size_t stack_allocs = 0;
+        const valgrind_result valgrind{};
+        const double stack_allocs_fraction = stack_allocs + valgrind.heap_allocs == 0 ? 0 :
+            static_cast<double>(stack_allocs) /
+            static_cast<double>(stack_allocs + valgrind.heap_allocs);
+        const double heap_allocs_fraction = stack_allocs + valgrind.heap_allocs == 0 ? 0 :
+            static_cast<double>(valgrind.heap_allocs) /
+            static_cast<double>(stack_allocs + valgrind.heap_allocs);
 
         std::string as_csv() {
-            return utils::string_format("%lu,%lu,%lf,%lf", stack_allocs, heap_allocs, stack_allocs_fraction, heap_allocs_fraction);
+            return utils::string_format(
+                "%lu,%lu,%lu,%lu,%.17g,%.17g,%.17g",
+                stack_allocs,
+                valgrind.heap_allocs,
+                valgrind.heap_frees,
+                valgrind.heap_memory,
+                valgrind.avg_heap_alloc_sz,
+                stack_allocs_fraction,
+                heap_allocs_fraction
+            );
         }
     };
 
     parsed_inspectors_output(
             const std::string& stack_inspector_output, const std::string& valgrind_output
-    ) : output_{stack_inspector_output, valgrind_output} {}
+    ) : output_{stack_inspector_output, valgrind_output}, result_(parse_stack_inspector(), parse_valgrind()) {}
 
-    inspectors_result parse_and_take() {
-        parse_stack_inspector();
-        parse_valgrind();
-        return inspectors_result{stack_allocs_, heap_allocs_};
+    inspectors_result take() {
+        return result_;
     }
 
 private:
-    void parse_stack_inspector() {
+    size_t parse_stack_inspector() {
         std::string info;
         try {
             info = obtain_line_from_string_that_starts_with(
@@ -69,7 +94,7 @@ private:
         } catch (const std::invalid_argument& e) {
             throw stack_inspector_out_format_error(e.what());
         }
-
+        size_t stack_allocs_;
         if (
             sscanf(
                 info.c_str(),
@@ -81,9 +106,10 @@ private:
                     "Unable to read instrumentation result."
             );
         }
+        return stack_allocs_;
     }
 
-    void parse_valgrind() {
+    inspectors_result::valgrind_result parse_valgrind() {
         std::string info;
         try {
             info = obtain_line_from_string_that_starts_with(
@@ -93,10 +119,17 @@ private:
         } catch (const std::invalid_argument& e) {
             throw valgrind_out_format_error(e.what());
         }
+        // TODO: 19 is hardcode for maximum decimal digits in uint64 number
+        std::unique_ptr<char[]> heap_allocs_strbuf(new char[19]);
+        std::unique_ptr<char[]> heap_frees_strbuf(new char[19]);
+        std::unique_ptr<char[]> heap_memory_strbuf(new char[19]);
         if (
             sscanf(
                 info.c_str(),
-                "total heap usage: %lu", &heap_allocs_
+                "total heap usage: %s allocs, %s frees, %s bytes allocated",
+                heap_allocs_strbuf.get(),
+                heap_frees_strbuf.get(),
+                heap_memory_strbuf.get()
             ) == 0
         ) {
             throw valgrind_out_format_error(
@@ -104,6 +137,10 @@ private:
                     "Unable to read total heap usage."
             );
         }
+        return inspectors_result::valgrind_result{
+            comma_number_to_int(heap_allocs_strbuf.get()),
+            comma_number_to_int(heap_frees_strbuf.get()),
+            comma_number_to_int(heap_memory_strbuf.get())};
     }
 
     static std::string obtain_line_from_string_that_starts_with(
@@ -126,16 +163,26 @@ private:
         return str.substr(begin, end - begin + 1);
     }
 
+    size_t comma_number_to_int(std::string number) {
+        number.erase(
+            std::remove(number.begin(), number.end(), ','),
+            number.end()
+        );
+        return std::atoi(number.c_str());
+    }
+
     const inspectors_output output_;
-    size_t stack_allocs_{};
-    size_t heap_allocs_{};
+    inspectors_result result_{};
 };
 
 std::ostream& operator<<(std::ostream& os, const parsed_inspectors_output::inspectors_result& res) {
     os << "stack allocations: " << res.stack_allocs << "\n"
-       << "heap allocations: " << res.heap_allocs << "\n"
-       << "stack allocations fraction: " << res.stack_allocs_fraction << "%" << "\n"
-       << "heap allocations fraction: " << res.heap_allocs_fraction << "%";
+       << "heap allocations: " << res.valgrind.heap_allocs << "\n"
+       << "heap frees: " << res.valgrind.heap_frees << "\n"
+       << "heap bytes allocated: " << res.valgrind.heap_memory << "\n"
+       << "heap average allocation size: " << res.valgrind.avg_heap_alloc_sz << "\n"
+       << "stack allocations fraction: " << res.stack_allocs_fraction * 100 << "%" << "\n"
+       << "heap allocations fraction: " << res.heap_allocs_fraction * 100 << "%";
     return os;
 }
 

@@ -28,12 +28,6 @@ int main(int argc, char* argv[]) {
     }
     std::string executable = std::string(argv[1]);
     // TODO: add possibility to pass "-only_from_app" flag as an argument
-    std::cout << string_format(
-            "%s -c %s -only_from_app -- %s",
-            DRRUN_EXECUTABLE,
-            STACK_INSPECTOR,
-            executable.c_str()
-    ) << std::endl;
     return std::system(
         string_format(
             "%s -c %s -only_from_app -- %s",

@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
         parsed_inspectors_output::inspectors_result result = parsed_inspectors_output(
             stack_inspector_output,
             valgrind_output
-        ).parse_and_take();
+        ).take();
         if (csv_result) {
             std::cout << result.as_csv() << std::endl;
         } else {
