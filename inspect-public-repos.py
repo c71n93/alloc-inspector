@@ -45,17 +45,16 @@ def collect_executables_from_directories_recursively(directories, skip=None, ign
 def inspect_executables_for_repository(inspector_exec, executables, repository_name, result_directory):
     result_csv_file = open(os.path.join(result_directory, repository_name + ".csv"), "w")
     result_csv_writer = csv.writer(result_csv_file, delimiter=",")
-    result_csv_writer.writerow(
-        ["Executable", "Stack Allocs", "Heap Allocs", "Heap Frees", "Summary Bytes Allocated",
-         "Average Bytes Per Allocation", "Valgrind Error Summary", "Stack Allocs Fraction", "Heap Allocs Fraction",
-         "Executable Size", "Elapsed Time"]
-    )
+    header = ["Executable", "Stack Allocs", "Heap Allocs", "Heap Frees", "Summary Bytes Allocated",
+              "Average Bytes Per Allocation", "Valgrind Error Summary", "Stack Allocs Fraction",
+              "Heap Allocs Fraction", "Executable Size", "Elapsed Time"]
+    result_csv_writer.writerow(header)
     retcode_to_error = {
-        1: [["stack_inspector timeout" for _ in range(0, 7)]],
-        2: [["valgrind timeout" for _ in range(0, 7)]],
-        3: [["stack_inspector parsing error" for _ in range(0, 7)]],
-        4: [["valgrind parsing error" for _ in range(0, 7)]],
-        "default": [["error" for _ in range(0, 7)]]
+        1: [["stack_inspector timeout" for _ in range(0, len(header) - 3)]],
+        2: [["valgrind timeout" for _ in range(0, len(header) - 3)]],
+        3: [["stack_inspector parsing error" for _ in range(0, len(header) - 3)]],
+        4: [["valgrind parsing error" for _ in range(0, len(header) - 3)]],
+        "default": [["error" for _ in range(0, len(header) - 3)]]
     }
     for executable in executables:
         print(f"inspecting: {executable}:")
