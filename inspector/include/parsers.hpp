@@ -87,7 +87,7 @@ private:
     size_t parse_stack_inspector() {
         std::string info;
         try {
-            info = obtain_line_from_string_that_starts_with(
+            info = obtain_last_line_from_string_that_starts_with(
                     output_.stack_inspector_output,
                     "Instrumentation results:"
             );
@@ -112,7 +112,7 @@ private:
     inspectors_result::valgrind_result parse_valgrind() {
         std::string info;
         try {
-            info = obtain_line_from_string_that_starts_with(
+            info = obtain_last_line_from_string_that_starts_with(
                     output_.valgrind_output,
                     "total heap usage:"
             );
@@ -143,10 +143,10 @@ private:
             comma_number_to_int(heap_memory_strbuf.get())};
     }
 
-    static std::string obtain_line_from_string_that_starts_with(
+    static std::string obtain_last_line_from_string_that_starts_with(
             const std::string& str, const std::string& starts_with
     ) {
-        size_t begin = str.find(starts_with);
+        size_t begin = str.rfind(starts_with);
         size_t end = begin;
         if (begin == std::string::npos) {
             throw std::invalid_argument(
