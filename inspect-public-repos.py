@@ -4,6 +4,7 @@ import subprocess
 import csv
 from io import StringIO
 import time
+import copy
 
 
 def is_executable(file):
@@ -46,9 +47,16 @@ def inspect_executables_for_repository(inspector_exec, executables, repository_n
     result_csv_writer = csv.writer(result_csv_file, delimiter=",")
     result_csv_writer.writerow(
         ["Executable", "Stack Allocs", "Heap Allocs", "Heap Frees", "Summary Bytes Allocated",
-         "Average Bytes Per Allocation", "Stack Allocs Fraction", "Heap Allocs Fraction", "Executable Size",
-         "Elapsed Time"]
+         "Average Bytes Per Allocation", "Valgrind Error Summary", "Stack Allocs Fraction", "Heap Allocs Fraction",
+         "Executable Size", "Elapsed Time"]
     )
+    retcode_to_error = {
+        1: [["stack_inspector timeout" for _ in range(0, 7)]],
+        2: [["valgrind timeout" for _ in range(0, 7)]],
+        3: [["stack_inspector parsing error" for _ in range(0, 7)]],
+        4: [["valgrind parsing error" for _ in range(0, 7)]],
+        "default": [["error" for _ in range(0, 7)]]
+    }
     for executable in executables:
         print(f"inspecting: {executable}:")
         start = time.time()
@@ -57,11 +65,16 @@ def inspect_executables_for_repository(inspector_exec, executables, repository_n
         file_size = os.stat(executable).st_size
         elapsed = end - start
         f = StringIO(inspector_process.stdout.decode("utf-8"))
+        retcode = inspector_process.returncode
         res = list(csv.reader(f, delimiter=","))
-        if len(res) == 0:
+        if retcode != 0:
+            print(f"error: non zero exit code while inspecting {executable}")
+            print(inspector_process.stderr.decode("utf-8"))
+            res = copy.deepcopy(retcode_to_error.copy().get(retcode, retcode_to_error.get("default")))
+        elif len(res) == 0:
             print(f"error: something went wrong while inspecting {executable}")
             print(inspector_process.stderr.decode("utf-8"))
-            res = [["error" for _ in range(0, 7)]]
+            res = copy.deepcopy(retcode_to_error.get("default").copy())
         row = res[0]
         row.insert(0, executable)
         row.append(str(file_size))

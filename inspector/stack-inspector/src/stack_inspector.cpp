@@ -29,23 +29,17 @@ static uint64 global_count;
 /* A simple clean call that will be automatically inlined because it has only
  * one argument and contains no calls to other functions.
  */
-static void
-alloc_inscount(uint num_instrs)
-{
+static void alloc_inscount(uint num_instrs) {
     global_count += num_instrs;
 }
-static void
-event_exit(void);
-static dr_emit_flags_t
-event_bb_analysis(void *drcontext, void *tag, instrlist_t *bb, bool for_trace,
-                  bool translating, void **user_data);
-static dr_emit_flags_t
-event_app_instruction(void *drcontext, void *tag, instrlist_t *bb, instr_t *inst,
-                      bool for_trace, bool translating, void *user_data);
+static void event_exit(void);
+static dr_emit_flags_t event_bb_analysis(void *drcontext, void *tag, instrlist_t *bb,
+                                         bool for_trace, bool translating, void **user_data);
+static dr_emit_flags_t event_app_instruction(void *drcontext, void *tag, instrlist_t *bb,
+                                             instr_t *inst, bool for_trace, bool translating,
+                                             void *user_data);
 
-DR_EXPORT void
-dr_client_main(client_id_t id, int argc, const char *argv[])
-{
+DR_EXPORT void dr_client_main(client_id_t id, int argc, const char *argv[]) {
     dr_set_client_name("DynamoRIO Client 'stack_inspector'",
                        "http://dynamorio.org/issues");
 
@@ -79,9 +73,7 @@ dr_client_main(client_id_t id, int argc, const char *argv[])
     }
 }
 
-static void
-event_exit(void)
-{
+static void event_exit(void) {
     char msg[512];
     int len;
     len = dr_snprintf(msg, sizeof(msg) / sizeof(msg[0]),
@@ -94,11 +86,13 @@ event_exit(void)
 }
 
 static bool is_allocation_instruction(instr_t *instr) {
-    if (instr_get_opcode(instr) == OP_push || instr_get_opcode(instr) == OP_pushf
-        || instr_get_opcode(instr) == OP_push_imm || instr_get_opcode(instr) == OP_pusha) {
+    int opcode = instr_get_opcode(instr);
+    if (opcode == OP_push || opcode == OP_pushf || opcode == OP_push_imm || opcode == OP_pusha) {
         return true;
     }
-    if (instr_get_opcode(instr) == OP_sub && opnd_is_reg(instr_get_dst(instr, 0)) && opnd_get_reg(instr_get_dst(instr, 0)) == DR_REG_RSP) {
+    if (opcode == OP_sub
+        && opnd_is_reg(instr_get_dst(instr, 0))
+        && opnd_get_reg(instr_get_dst(instr, 0)) == DR_REG_RSP) {
         return true;
     }
     if (instr_is_call(instr)) {
@@ -107,10 +101,8 @@ static bool is_allocation_instruction(instr_t *instr) {
     return false;
 }
 
-static dr_emit_flags_t
-event_bb_analysis(void *drcontext, void *tag, instrlist_t *bb, bool for_trace,
-                  bool translating, void **user_data)
-{
+static dr_emit_flags_t event_bb_analysis(void *drcontext, void *tag, instrlist_t *bb,
+                                         bool for_trace, bool translating, void **user_data) {
     instr_t *instr;
     uint num_instrs;
 
@@ -178,10 +170,9 @@ event_bb_analysis(void *drcontext, void *tag, instrlist_t *bb, bool for_trace,
     return DR_EMIT_DEFAULT;
 }
 
-static dr_emit_flags_t
-event_app_instruction(void *drcontext, void *tag, instrlist_t *bb, instr_t *instr,
-                      bool for_trace, bool translating, void *user_data)
-{
+static dr_emit_flags_t event_app_instruction(void *drcontext, void *tag, instrlist_t *bb,
+                                             instr_t *instr, bool for_trace, bool translating,
+                                             void *user_data) {
     uint num_instrs;
     /* By default drmgr enables auto-predication, which predicates all instructions with
      * the predicate of the current instruction on ARM.

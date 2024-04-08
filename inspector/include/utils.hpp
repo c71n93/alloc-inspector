@@ -7,17 +7,23 @@
 
 namespace inspector::utils {
 
-std::string exec(const std::string &cmd) {
+struct exec_result {
+    const std::string output;
+    const int exit_code;
+};
+
+exec_result exec(const std::string &cmd) {
     std::array<char, 128> buffer{};
     std::string result;
-    std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd.c_str(), "r"), pclose);
+    auto pipe = popen(cmd.c_str(), "r");
     if (!pipe) {
         throw std::runtime_error("popen() failed!");
     }
-    while (fgets(buffer.data(), static_cast<int>(buffer.size()), pipe.get()) != nullptr) {
+    while (fgets(buffer.data(), static_cast<int>(buffer.size()), pipe) != nullptr) {
         result += buffer.data();
     }
-    return result;
+    auto exit_code = pclose(pipe);
+    return exec_result{result, exit_code};
 }
 
 template<typename T>

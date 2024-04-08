@@ -37,14 +37,17 @@ public:
     struct inspectors_result {
         struct valgrind_result {
             explicit
-            valgrind_result(size_t heap_allocs = 0, size_t heap_frees = 0, size_t heap_memory = 0)
-                : heap_allocs(heap_allocs), heap_frees(heap_frees), heap_memory(heap_memory) {}
+            valgrind_result(size_t heap_allocs = 0, size_t heap_frees = 0, size_t heap_memory = 0,
+                            size_t errors = 0)
+                : heap_allocs(heap_allocs), heap_frees(heap_frees), heap_memory(heap_memory),
+                errors(errors) {}
 
             const size_t heap_allocs;
             const size_t heap_frees;
             const size_t heap_memory;
             const double avg_heap_alloc_sz = heap_memory == 0? 0 :
                 static_cast<double>(heap_memory) / static_cast<double>(heap_allocs);
+            const size_t errors;
         };
 
         explicit inspectors_result(
@@ -63,12 +66,13 @@ public:
 
         std::string as_csv() {
             return utils::string_format(
-                "%lu,%lu,%lu,%lu,%.17g,%.17g,%.17g",
+                "%lu,%lu,%lu,%lu,%.17g,%lu,%.17g,%.17g",
                 stack_allocs,
                 valgrind.heap_allocs,
                 valgrind.heap_frees,
                 valgrind.heap_memory,
                 valgrind.avg_heap_alloc_sz,
+                valgrind.errors,
                 stack_allocs_fraction,
                 heap_allocs_fraction
             );
@@ -102,8 +106,8 @@ private:
             ) == 0
         ) {
             throw stack_inspector_out_format_error(
-                    "Wrong format of stack_inspector result output. "
-                    "Unable to read instrumentation result."
+                "Wrong format of stack_inspector result output. "
+                "Unable to read instrumentation result."
             );
         }
         return stack_allocs_;
@@ -133,14 +137,32 @@ private:
             ) == 0
         ) {
             throw valgrind_out_format_error(
+                "Wrong format of valgrind result output. "
+                "Unable to read total heap usage."
+            );
+        }
+        std::string error;
+        try {
+            error = obtain_last_line_from_string_that_starts_with(
+                    output_.valgrind_output,
+                    "ERROR SUMMARY:"
+            );
+        } catch (const std::invalid_argument& e) {
+            throw valgrind_out_format_error(e.what());
+        }
+        size_t errors;
+        if (sscanf(error.c_str(), "ERROR SUMMARY: %ld errors", &errors) == 0) {
+            throw valgrind_out_format_error(
                     "Wrong format of valgrind result output. "
-                    "Unable to read total heap usage."
+                    "Unable to read ERROR SUMMARY."
             );
         }
         return inspectors_result::valgrind_result{
             comma_number_to_int(heap_allocs_strbuf.get()),
             comma_number_to_int(heap_frees_strbuf.get()),
-            comma_number_to_int(heap_memory_strbuf.get())};
+            comma_number_to_int(heap_memory_strbuf.get()),
+            errors
+        };
     }
 
     static std::string obtain_last_line_from_string_that_starts_with(
@@ -151,9 +173,8 @@ private:
         if (begin == std::string::npos) {
             throw std::invalid_argument(
                 utils::string_format(
-                    "There is no such line that starts with \"%s\" in the string:\n %s",
-                    starts_with.c_str(),
-                    str.c_str()
+                    "There is no such line that starts with \"%s\" in the given string.",
+                    starts_with.c_str()
                 )
             );
         }
@@ -172,7 +193,7 @@ private:
     }
 
     const inspectors_output output_;
-    inspectors_result result_{};
+    const inspectors_result result_;
 };
 
 std::ostream& operator<<(std::ostream& os, const parsed_inspectors_output::inspectors_result& res) {
@@ -181,6 +202,7 @@ std::ostream& operator<<(std::ostream& os, const parsed_inspectors_output::inspe
        << "heap frees: " << res.valgrind.heap_frees << "\n"
        << "heap bytes allocated: " << res.valgrind.heap_memory << "\n"
        << "heap average allocation size: " << res.valgrind.avg_heap_alloc_sz << "\n"
+       << "valgrind error summary: " << res.valgrind.errors << "\n"
        << "stack allocations fraction: " << res.stack_allocs_fraction * 100 << "%" << "\n"
        << "heap allocations fraction: " << res.heap_allocs_fraction * 100 << "%";
     return os;
