@@ -38,14 +38,15 @@ int main(int argc, char* argv[]) {
                   << timelimit << "s" << std::endl;
         return ret_code::STACK_INSPECTOR_TIMEOUT;
     }
+    // TODO: add possibility to pass --multiprocess to enable --trace-children=yes if needed
     exec_result valgrind_result = exec(
         string_format(
-            "timeout --signal=SIGKILL %d valgrind %s 2>&1",
+            "timeout --signal=SIGKILL %d valgrind --trace-children=yes %s 2>&1",
             timelimit,
             executable.c_str()
         )
     );
-    // TODO: why valgrind don't returning SIGKILL when killed?
+    // TODO: why valgrind not returning SIGKILL when killed?
     if (stack_inspector_result.exit_code == SIGKILL) {
         std::cerr << "valgrind is killed due to exceeding the time limit of "
                   << timelimit << "s" << std::endl;

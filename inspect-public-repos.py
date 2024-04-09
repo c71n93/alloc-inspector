@@ -45,7 +45,7 @@ def inspect_executables_for_repository(inspector_exec, executables, repository_n
     result_csv_file = open(os.path.join(result_directory, repository_name + ".csv"), "w")
     result_csv_writer = csv.writer(result_csv_file, delimiter=",")
     header = ["Executable", "Stack Allocs", "Stack Inspector Runs", "Heap Allocs", "Heap Frees",
-              "Summary Bytes Allocated", "Average Bytes Per Allocation", "Valgrind Error Summary",
+              "Summary Bytes Allocated", "Average Bytes Per Allocation", "Valgrind Runs", "Valgrind Error Summary",
               "Stack Allocs Fraction", "Heap Allocs Fraction", "Executable Size", "Elapsed Time"]
     result_csv_writer.writerow(header)
     retcode_to_error = {
