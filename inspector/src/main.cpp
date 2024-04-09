@@ -18,7 +18,7 @@ using inspector::utils::exec_result;
 int main(int argc, char* argv[]) {
     if (argc != 2) {
         std::cerr << "error: wrong argument number: executable file is required" << std::endl;
-        return 1;
+        return 0;
     }
     std::string executable = std::string(argv[1]);
     // TODO: add possibility to pass "-csv_result" flag as an argument

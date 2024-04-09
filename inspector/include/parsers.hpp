@@ -35,10 +35,21 @@ public:
     };
 
     struct inspectors_result {
-        struct valgrind_result {
+        struct stack_inspector_results {
             explicit
-            valgrind_result(size_t heap_allocs = 0, size_t heap_frees = 0, size_t heap_memory = 0,
-                            size_t errors = 0)
+            stack_inspector_results() : stack_allocs(0), num_of_runs(0) {}
+            explicit
+            stack_inspector_results(size_t stack_allocs, size_t num_of_runs)
+                : stack_allocs(stack_allocs), num_of_runs(num_of_runs) {}
+
+            const size_t stack_allocs;
+            const size_t num_of_runs;
+        };
+        struct valgrind_result {
+            valgrind_result() : heap_allocs(0), heap_frees(0), heap_memory(0), errors(0) {}
+            explicit
+            valgrind_result(size_t heap_allocs, size_t heap_frees, size_t heap_memory,
+                            size_t errors)
                 : heap_allocs(heap_allocs), heap_frees(heap_frees), heap_memory(heap_memory),
                 errors(errors) {}
 
@@ -51,23 +62,24 @@ public:
         };
 
         explicit inspectors_result(
-            size_t stack_allocs = 0,
-            valgrind_result valgrind = valgrind_result{}
-        ) : stack_allocs(stack_allocs), valgrind(valgrind) {}
+            stack_inspector_results stack_inspector,
+            valgrind_result valgrind
+        ) : stack_inspector{stack_inspector}, valgrind(valgrind) {}
 
-        const size_t stack_allocs = 0;
+        const stack_inspector_results stack_inspector{};
         const valgrind_result valgrind{};
-        const double stack_allocs_fraction = stack_allocs + valgrind.heap_allocs == 0 ? 0 :
-            static_cast<double>(stack_allocs) /
-            static_cast<double>(stack_allocs + valgrind.heap_allocs);
-        const double heap_allocs_fraction = stack_allocs + valgrind.heap_allocs == 0 ? 0 :
+        const double stack_allocs_fraction = stack_inspector.stack_allocs + valgrind.heap_allocs == 0 ? 0 :
+            static_cast<double>(stack_inspector.stack_allocs) /
+            static_cast<double>(stack_inspector.stack_allocs + valgrind.heap_allocs);
+        const double heap_allocs_fraction = stack_inspector.stack_allocs + valgrind.heap_allocs == 0 ? 0 :
             static_cast<double>(valgrind.heap_allocs) /
-            static_cast<double>(stack_allocs + valgrind.heap_allocs);
+            static_cast<double>(stack_inspector.stack_allocs + valgrind.heap_allocs);
 
         std::string as_csv() {
             return utils::string_format(
-                "%lu,%lu,%lu,%lu,%.17g,%lu,%.17g,%.17g",
-                stack_allocs,
+                "%lu,%lu,%lu,%lu,%lu,%.17g,%lu,%.17g,%.17g",
+                stack_inspector.stack_allocs,
+                stack_inspector.num_of_runs,
                 valgrind.heap_allocs,
                 valgrind.heap_frees,
                 valgrind.heap_memory,
@@ -88,29 +100,40 @@ public:
     }
 
 private:
-    size_t parse_stack_inspector() {
+    inspectors_result::stack_inspector_results parse_stack_inspector() {
+        size_t occurrences = 0;
+        size_t summary_allocs = 0;
+        size_t pos = 0;
         std::string info;
-        try {
-            info = obtain_last_line_from_string_that_starts_with(
-                    output_.stack_inspector_output,
-                    "Instrumentation results:"
-            );
-        } catch (const std::invalid_argument& e) {
-            throw stack_inspector_out_format_error(e.what());
+        while ((pos = output_.stack_inspector_output.find("Instrumentation results:", pos)) != std::string::npos) {
+            info = obtain_next_line(pos, output_.stack_inspector_output);
+            ++occurrences;
+            summary_allocs += obtain_single_stack_inspector_result(info);
+            pos += info.length();
         }
-        size_t stack_allocs_;
+        if (occurrences == 0) {
+            throw stack_inspector_out_format_error("There is no \"Instrumentation results\""
+                                                   "string in stack_inspector output.");
+        }
+        return inspectors_result::stack_inspector_results{
+            summary_allocs, occurrences
+        };
+    }
+
+    static size_t obtain_single_stack_inspector_result(const std::string& result) {
+        size_t stack_allocs;
         if (
             sscanf(
-                info.c_str(),
-                "Instrumentation results: %lu", &stack_allocs_
+                result.c_str(),
+                "Instrumentation results: %lu", &stack_allocs
             ) == 0
         ) {
             throw stack_inspector_out_format_error(
-                "Wrong format of stack_inspector result output. "
-                "Unable to read instrumentation result."
+                    "Wrong format of stack_inspector result output. "
+                    "Unable to read instrumentation result."
             );
         }
-        return stack_allocs_;
+        return stack_allocs;
     }
 
     inspectors_result::valgrind_result parse_valgrind() {
@@ -169,7 +192,6 @@ private:
             const std::string& str, const std::string& starts_with
     ) {
         size_t begin = str.rfind(starts_with);
-        size_t end = begin;
         if (begin == std::string::npos) {
             throw std::invalid_argument(
                 utils::string_format(
@@ -178,13 +200,18 @@ private:
                 )
             );
         }
+        return obtain_next_line(begin, str);
+    }
+
+    static std::string obtain_next_line(size_t begin, const std::string& str) {
+        size_t end = begin;
         while (str[end] != '\n' && end < str.size()) {
             end++;
         }
         return str.substr(begin, end - begin + 1);
     }
 
-    size_t comma_number_to_int(std::string number) {
+    static size_t comma_number_to_int(std::string number) {
         number.erase(
             std::remove(number.begin(), number.end(), ','),
             number.end()
@@ -197,7 +224,8 @@ private:
 };
 
 std::ostream& operator<<(std::ostream& os, const parsed_inspectors_output::inspectors_result& res) {
-    os << "stack allocations: " << res.stack_allocs << "\n"
+    os << "stack allocations: " << res.stack_inspector.stack_allocs << "\n"
+       << "stack_inspector runs: " << res.stack_inspector.num_of_runs
        << "heap allocations: " << res.valgrind.heap_allocs << "\n"
        << "heap frees: " << res.valgrind.heap_frees << "\n"
        << "heap bytes allocated: " << res.valgrind.heap_memory << "\n"
