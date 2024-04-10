@@ -1,0 +1,4 @@
+Executable,Stack Allocs,Stack Inspector Runs,Heap Allocs,Heap Frees,Summary Bytes Allocated,Average Bytes Per Allocation,Valgrind Runs,Valgrind Error Summary,Stack Allocs Fraction,Heap Allocs Fraction,Executable Size,Elapsed Time
+mimalloc/out/release/mimalloc-test-api-fill,117,1,3,9,3072,1024,1,8,0.97499999999999998,0.025000000000000001,29808,5.606025457382202
+mimalloc/out/release/mimalloc-test-api,1070,1,8,460,67113024,8389128,1,454,0.99257884972170685,0.0074211502782931356,30432,13.93101167678833
+mimalloc/out/release/mimalloc-test-stress,97788311,1,27004655,27004655,1248004368,46.214416292302197,1,0,0.78360434994389028,0.21639565005610972,25960,153.57746624946594

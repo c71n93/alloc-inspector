@@ -1,5 +1,5 @@
-venv
+venv/
 .idea/
-backups
 build/
-__pycache__
+__pycache__/
+repos/

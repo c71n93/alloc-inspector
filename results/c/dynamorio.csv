@@ -1,0 +1,174 @@
+Executable,Stack Allocs,Stack Inspector Runs,Heap Allocs,Heap Frees,Summary Bytes Allocated,Average Bytes Per Allocation,Valgrind Runs,Valgrind Error Summary,Stack Allocs Fraction,Heap Allocs Fraction,Executable Size,Elapsed Time
+dynamorio/build/suite/tests/bin/simple_app,17,1,0,0,0,0,1,0,1,0,27704,1.3108839988708496
+dynamorio/build/suite/tests/bin/allasm_x86_64,0,1,0,0,0,0,1,0,0,0,9048,0.07396459579467773
+dynamorio/build/suite/tests/bin/api.ir,0,1,0,0,0,0,1,0,0,0,11813184,0.3513007164001465
+dynamorio/build/suite/tests/bin/api.ir-static,138995,1,1316,1316,57932,44.021276595744681,1,16,0.99062083514478549,0.0093791648552144884,804032,1.292729377746582
+dynamorio/build/suite/tests/bin/api.drdecode,5207,1,31,31,5680,183.2258064516129,1,0,0.99408171057655592,0.005918289423444063,610392,0.5296487808227539
+dynamorio/build/suite/tests/bin/common.broadfun spaces,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,27840,0.10468554496765137
+dynamorio/build/suite/tests/bin/common.fib,93400776,1,0,0,0,0,1,0,1,0,27784,3.020324945449829
+dynamorio/build/suite/tests/bin/common.decode-bad,error,error,error,error,error,error,error,error,error,error,27904,611.9965302944183
+dynamorio/build/suite/tests/bin/common.decode,317,1,0,0,0,0,1,3,1,0,27928,4.40855073928833
+dynamorio/build/suite/tests/bin/common.eflags,255,1,0,0,0,0,1,0,1,0,27944,0.6270990371704102
+dynamorio/build/suite/tests/bin/common.floatpc,41,1,0,0,0,0,1,0,1,0,27712,0.6325869560241699
+dynamorio/build/suite/tests/bin/common.getretaddr,24,1,0,0,0,0,1,0,1,0,27712,0.478013277053833
+dynamorio/build/suite/tests/bin/common.nativeexec,386,1,100,100,800,8,1,0,0.79423868312757206,0.20576131687242799,32688,0.8707282543182373
+dynamorio/build/suite/tests/bin/common.segfault,36,1,0,0,0,0,1,1,1,0,27760,0.7752153873443604
+dynamorio/build/suite/tests/bin/libutil.frontend_test,134,1,3,3,4356,1452,1,1,0.97810218978102192,0.021897810218978103,40432,0.6495602130889893
+dynamorio/build/suite/tests/bin/libutil.drconfig_test,12,1,0,0,0,0,1,0,1,0,78512,0.7456426620483398
+dynamorio/build/suite/tests/bin/client.call-retarget,26,1,0,0,0,0,1,0,1,0,27768,0.47440481185913086
+dynamorio/build/suite/tests/bin/client.abort,11,1,0,0,0,0,1,0,1,0,22656,0.5690932273864746
+dynamorio/build/suite/tests/bin/client.modules,12,1,0,0,0,0,1,0,1,0,27864,0.4809443950653076
+dynamorio/build/suite/tests/bin/client.alloc,80,1,0,0,0,0,1,0,1,0,27712,0.5423052310943604
+dynamorio/build/suite/tests/bin/client.alloc-noreset,80,1,0,0,0,0,1,0,1,0,27720,0.46910905838012695
+dynamorio/build/suite/tests/bin/client.cleancall,97,1,0,0,0,0,1,0,1,0,27928,0.5099036693572998
+dynamorio/build/suite/tests/bin/client.count-ctis,30,1,0,0,0,0,1,0,1,0,27712,0.4737355709075928
+dynamorio/build/suite/tests/bin/client.syscall,16,1,0,0,0,0,1,0,1,0,22744,0.4924771785736084
+dynamorio/build/suite/tests/bin/client.annotation-concurrency,34,1,0,0,0,0,1,0,1,0,41816,0.47391295433044434
+dynamorio/build/suite/tests/bin/client.annotation-concurrency-opt,36,1,0,0,0,0,1,0,1,0,37720,0.49428486824035645
+dynamorio/build/suite/tests/bin/client.annotation-detection,945,1,5,3,72932,14586.4,1,0,0.99473684210526314,0.005263157894736842,43568,2.538766622543335
+dynamorio/build/suite/tests/bin/client.annotation-detection-opt,667,1,5,3,72932,14586.4,1,0,0.99255952380952384,0.0074404761904761901,43248,0.7538282871246338
+dynamorio/build/suite/tests/bin/client.partial_module_map,29,1,0,0,0,0,1,0,1,0,31848,0.5795731544494629
+dynamorio/build/suite/tests/bin/client.mbr_instrumentation_segment,18,1,0,0,0,0,1,0,1,0,22640,0.6989407539367676
+dynamorio/build/suite/tests/bin/client.segfault,758,1,0,0,0,0,1,1,1,0,27976,1.960263967514038
+dynamorio/build/suite/tests/bin/client.execfault,75,1,0,0,0,0,1,2,1,0,27872,0.6281273365020752
+dynamorio/build/suite/tests/bin/client.vg-annot,209,1,4,4,5986,1496.5,1,0,0.98122065727699526,0.018779342723004695,22872,0.6540040969848633
+dynamorio/build/suite/tests/bin/client.vg-annot-opt,211,1,4,4,5986,1496.5,1,0,0.98139534883720925,0.018604651162790697,22824,0.6093790531158447
+dynamorio/build/suite/tests/bin/client.events,193,2,4,0,150,37.5,2,1,0.97969543147208127,0.02030456852791878,28136,1.357802391052246
+dynamorio/build/suite/tests/bin/client.events_cpp,193,2,6,0,145558,24259.666666666668,2,1,0.96984924623115576,0.03015075376884422,28144,1.5104081630706787
+dynamorio/build/suite/tests/bin/client.timer,13000163,1,0,0,0,0,1,0,1,0,27816,1.3978791236877441
+dynamorio/build/suite/tests/bin/client.mangle_suspend,254059,1,1,1,272,272,1,0,0.99999606392190821,3.9360780917893413e-06,28128,1.5985429286956787
+dynamorio/build/suite/tests/bin/client.syscall-mod,15,1,0,0,0,0,1,0,1,0,22720,0.6219208240509033
+dynamorio/build/suite/tests/bin/client.signal,116,1,0,0,0,0,1,2,1,0,27904,0.4686613082885742
+dynamorio/build/suite/tests/bin/client.cbr-retarget,26,1,0,0,0,0,1,0,1,0,27768,0.5991873741149902
+dynamorio/build/suite/tests/bin/client.cleancallsig,265972421,1,0,0,0,0,1,8327685,1,0,27768,4.350561141967773
+dynamorio/build/suite/tests/bin/client.file_io,541,1,0,0,0,0,1,0,1,0,32352,0.574897289276123
+dynamorio/build/suite/tests/bin/client.thread,17,1,0,0,0,0,1,0,1,0,27704,0.5906670093536377
+dynamorio/build/suite/tests/bin/client.strace,24,1,1,1,4096,4096,1,0,0.95999999999999996,0.040000000000000001,22912,0.5261151790618896
+dynamorio/build/suite/tests/bin/client.cleancall-opt-1,22,1,0,0,0,0,1,0,1,0,27984,0.5371544361114502
+dynamorio/build/suite/tests/bin/client.inline,32,1,0,0,0,0,1,0,1,0,28144,0.5243682861328125
+dynamorio/build/suite/tests/bin/client.null_instrument,10030,1,0,0,0,0,1,0,1,0,27816,1.0562617778778076
+dynamorio/build/suite/tests/bin/client.large_options,53,2,0,0,0,0,2,0,1,0,28000,0.9493803977966309
+dynamorio/build/suite/tests/bin/client.gonative,85,1,1,1,272,272,1,1,0.98837209302325579,0.011627906976744186,33000,0.6991500854492188
+dynamorio/build/suite/tests/bin/client.drmgr-test,59,1,0,0,0,0,1,0,1,0,28392,0.5838322639465332
+dynamorio/build/suite/tests/bin/client.drx_buf-test,1683,1,1,1,272,272,1,1,0.99940617577197155,0.00059382422802850359,28056,0.5815937519073486
+dynamorio/build/suite/tests/bin/client.drbbdup-meta-label-bb-test-exe,0,1,0,0,0,0,1,0,0,0,4920,0.1903078556060791
+dynamorio/build/suite/tests/bin/client.drbbdup-meta-nop-bb-test-exe,0,1,0,0,0,0,1,0,0,0,4920,0.16450834274291992
+dynamorio/build/suite/tests/bin/client.drbbdup-empty-bb-test-exe,0,1,0,0,0,0,1,0,0,0,4912,0.10850381851196289
+dynamorio/build/suite/tests/bin/client.drbbdup-drwrap-test,18,1,0,0,0,0,1,0,1,0,27872,0.6503086090087891
+dynamorio/build/suite/tests/bin/client.drbbdup-emul-test,18,1,0,0,0,0,1,0,1,0,27720,0.5138847827911377
+dynamorio/build/suite/tests/bin/client.drbbdup-emul-reg-clobber-test,30,1,0,0,0,0,1,0,1,0,27728,0.5494658946990967
+dynamorio/build/suite/tests/bin/client.process-id,35,2,2,1,544,272,2,0,0.94594594594594594,0.054054054054054057,22752,5.718150615692139
+dynamorio/build/suite/tests/bin/client.drreg-test,523,1,0,0,0,0,1,12,1,0,44072,0.6284956932067871
+dynamorio/build/suite/tests/bin/client.drx-test,47,1,0,0,0,0,1,0,1,0,28192,0.5309178829193115
+dynamorio/build/suite/tests/bin/client.low_on_memory,422,1,200,200,800,4,1,0,0.67845659163987138,0.32154340836012862,27816,0.5649306774139404
+dynamorio/build/suite/tests/bin/client.tls,47,1,1,1,288,288,1,0,0.97916666666666663,0.020833333333333332,28072,0.5569062232971191
+dynamorio/build/suite/tests/bin/client.drx-scattergather,2110,1,0,0,0,0,1,1,1,0,32056,0.545872688293457
+dynamorio/build/suite/tests/bin/allasm_scattergather,0,1,0,0,0,0,1,0,0,0,9184,0.21457457542419434
+dynamorio/build/suite/tests/bin/allasm_repstr,0,1,0,0,0,0,1,0,0,0,13136,0.14441871643066406
+dynamorio/build/suite/tests/bin/client.drwrap-test,18,1,0,0,0,0,1,0,1,0,27864,0.6057889461517334
+dynamorio/build/suite/tests/bin/client.drwrap-test-callconv,76,1,1,1,72704,72704,1,0,0.98701298701298701,0.012987012987012988,27992,0.6360049247741699
+dynamorio/build/suite/tests/bin/client.drwrap-test-detach,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,1864040,1.6951322555541992
+dynamorio/build/suite/tests/bin/client.drwrap-drreg-test,18,1,0,0,0,0,1,0,1,0,27872,0.6614890098571777
+dynamorio/build/suite/tests/bin/client.drsyms-test,18,1,1,1,72704,72704,1,0,0.94736842105263153,0.052631578947368418,28416,0.6686160564422607
+dynamorio/build/suite/tests/bin/client.drutil-test,57,1,0,0,0,0,1,0,1,0,28392,0.5465493202209473
+dynamorio/build/suite/tests/bin/client.pcache,24,1,0,0,0,0,1,0,1,0,27800,0.5928466320037842
+dynamorio/build/suite/tests/bin/api.dis,0,1,0,0,0,0,1,0,0,0,23232,0.297731876373291
+dynamorio/build/suite/tests/bin/api.startstop,0,1,0,0,0,0,1,0,0,0,33288,0.35688161849975586
+dynamorio/build/suite/tests/bin/api.detach,0,1,0,0,0,0,1,0,0,0,33136,0.29175496101379395
+dynamorio/build/suite/tests/bin/api.detach_state,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,1791088,1.601534366607666
+dynamorio/build/suite/tests/bin/api.detach_signal,0,1,0,0,0,0,1,0,0,0,33520,0.490739107131958
+dynamorio/build/suite/tests/bin/api.detach_spawn,0,1,0,0,0,0,1,0,0,0,32792,0.4565117359161377
+dynamorio/build/suite/tests/bin/api.detach_spawn_stress_FLAKY,0,1,0,0,0,0,1,0,0,0,32864,0.32233190536499023
+dynamorio/build/suite/tests/bin/api.detach_spawn_quick_exit,0,1,0,0,0,0,1,0,0,0,32864,0.36556434631347656
+dynamorio/build/suite/tests/bin/decenc.drdecode_decenc_x86_64,0,1,0,0,0,0,1,0,0,0,506976,0.3537023067474365
+dynamorio/build/suite/tests/bin/api.ibl-stress,0,1,0,0,0,0,1,0,0,0,38096,0.3245048522949219
+dynamorio/build/suite/tests/bin/api.static_startstop,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,1773368,1.4236698150634766
+dynamorio/build/suite/tests/bin/api.static_noclient,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,1781704,1.0095279216766357
+dynamorio/build/suite/tests/bin/api.static_noinit,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,1773320,1.744755744934082
+dynamorio/build/suite/tests/bin/api.static_detach,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,1781592,1.5697500705718994
+dynamorio/build/suite/tests/bin/api.static_prepop,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,1781592,1.641002893447876
+dynamorio/build/suite/tests/bin/api.static_reattach_client_flags,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,1781776,0.8549497127532959
+dynamorio/build/suite/tests/bin/api.static_signal,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,1786736,1200.3153517246246
+dynamorio/build/suite/tests/bin/api.static_crash,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,1781592,5.402751684188843
+dynamorio/build/suite/tests/bin/api.static_sideline_FLAKY,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,1781688,1200.3375344276428
+dynamorio/build/suite/tests/bin/api.static_symbols,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,1773368,4.744394063949585
+dynamorio/build/suite/tests/bin/api.static_maps_mixup_yesvars,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,1773080,1.6646013259887695
+dynamorio/build/suite/tests/bin/api.static_maps_mixup_novars_FLAKY,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,1773024,1.6099278926849365
+dynamorio/build/suite/tests/bin/api.thread_churn,0,1,0,0,0,0,1,0,0,0,28248,1.0552210807800293
+dynamorio/build/suite/tests/bin/client.nudge_ex,80,2,0,0,0,0,2,0,1,0,28168,40.64336657524109
+dynamorio/build/suite/tests/bin/client.app_args,18,1,0,0,0,0,1,0,1,0,27712,0.5765774250030518
+dynamorio/build/suite/tests/bin/client.retaddr,65,1,0,0,0,0,1,13,1,0,27744,0.5358891487121582
+dynamorio/build/suite/tests/bin/client.destructor,17,1,1,1,72704,72704,1,0,0.94444444444444442,0.055555555555555552,27712,1.8485386371612549
+dynamorio/build/suite/tests/bin/client.memval-test,32,1,0,0,0,0,1,0,1,0,27712,0.6267530918121338
+dynamorio/build/suite/tests/bin/builtin_prefetch,12,1,1,1,4096,4096,1,0,0.92307692307692313,0.076923076923076927,22624,0.5550689697265625
+dynamorio/build/suite/tests/bin/tool.multiproc,43,2,0,0,0,0,2,0,1,0,27912,0.5711021423339844
+dynamorio/build/suite/tests/bin/stride_benchmark,38,1,2,1,16849920,8424960,1,0,0.94999999999999996,0.050000000000000003,23232,1.2147338390350342
+dynamorio/build/suite/tests/bin/drmemtrace.signal_invariants,106,1,2,2,544,272,1,2,0.98148148148148151,0.018518518518518517,28368,0.6382269859313965
+dynamorio/build/suite/tests/bin/tool.heap_test,3025,1,1486,1486,246548,165.91386271870795,1,0,0.67058301928618935,0.3294169807138107,33104,0.6495025157928467
+dynamorio/build/suite/tests/bin/tool.drcacheoff.gencode,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,3322152,2.3377490043640137
+dynamorio/build/suite/tests/bin/tool.ssse3,0,1,0,0,0,0,1,0,0,0,4896,0.18928742408752441
+dynamorio/build/suite/tests/bin/tool.sse41,0,1,0,0,0,0,1,0,0,0,4896,0.11109375953674316
+dynamorio/build/suite/tests/bin/tool.sse42,0,1,0,0,0,0,1,0,0,0,4904,0.23101115226745605
+dynamorio/build/suite/tests/bin/tool.cpuid,98,1,0,0,0,0,1,0,1,0,27704,0.5307841300964355
+dynamorio/build/suite/tests/bin/linux.clone,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,28072,0.7322347164154053
+dynamorio/build/suite/tests/bin/linux.clone-pie,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,25896,1.0065865516662598
+dynamorio/build/suite/tests/bin/linux.execve-sub64,18,1,0,0,0,0,1,1,1,0,27768,0.9177391529083252
+dynamorio/build/suite/tests/bin/linux.execve64,18,1,0,0,0,0,1,0,1,0,27912,0.5532479286193848
+dynamorio/build/suite/tests/bin/linux.execve-sub,18,1,0,0,0,0,1,1,1,0,27768,0.9133367538452148
+dynamorio/build/suite/tests/bin/linux.execve-null,18,1,0,0,0,0,1,0,1,0,27912,0.501007080078125
+dynamorio/build/suite/tests/bin/linux.execve-config,18,1,0,0,0,0,1,1,1,0,27768,0.7367129325866699
+dynamorio/build/suite/tests/bin/linux.execv,18,1,0,0,0,0,1,0,1,0,27904,0.482694149017334
+dynamorio/build/suite/tests/bin/linux.execve-rec,597,1,2,2,1496,748,1,0,0.996661101836394,0.0033388981636060101,27984,4.401439905166626
+dynamorio/build/suite/tests/bin/linux.exit,21,1,0,0,0,0,1,0,1,0,27752,0.6331090927124023
+dynamorio/build/suite/tests/bin/linux.fork,1629,2,6,6,4488,748,2,0,0.9963302752293578,0.003669724770642202,27856,0.5965609550476074
+dynamorio/build/suite/tests/bin/linux.fork-sleep,1840,2,6,6,4488,748,2,0,0.99674972914409532,0.0032502708559046588,27912,0.7331006526947021
+dynamorio/build/suite/tests/bin/linux.infinite,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,stack_inspector parsing error,22432,0.7685129642486572
+dynamorio/build/suite/tests/bin/linux.longjmp,36,1,0,0,0,0,1,0,1,0,27864,0.6269938945770264
+dynamorio/build/suite/tests/bin/linux.prctl,47,1,0,0,0,0,1,0,1,0,27912,0.4645061492919922
+dynamorio/build/suite/tests/bin/linux.mmap,33,1,0,0,0,0,1,0,1,0,27752,0.5294399261474609
+dynamorio/build/suite/tests/bin/linux.zero-length-mem-ranges,31,1,0,0,0,0,1,0,1,0,27768,0.7087738513946533
+dynamorio/build/suite/tests/bin/linux.signal0000,500135,1,0,0,0,0,1,0,1,0,28144,0.9875199794769287
+dynamorio/build/suite/tests/bin/linux.signal0001,3500171,1,0,0,0,0,1,0,1,0,28248,0.7883117198944092
+dynamorio/build/suite/tests/bin/linux.signal0010,500160,1,1,1,16384,16384,1,0,0.99999800064379274,1.9993562073012489e-06,28352,0.9568870067596436
+dynamorio/build/suite/tests/bin/linux.signal0011,3500207,1,1,0,32768,32768,1,0,0.99999971430269285,2.8569730713146189e-07,28408,3.0883395671844482
+dynamorio/build/suite/tests/bin/linux.signal0100,500137,1,0,0,0,0,1,0,1,0,28144,0.951641321182251
+dynamorio/build/suite/tests/bin/linux.signal0101,3500173,1,0,0,0,0,1,0,1,0,28248,0.7396440505981445
+dynamorio/build/suite/tests/bin/linux.signal0110,500162,1,1,1,16384,16384,1,0,0.99999800065178757,1.9993482124827305e-06,28352,0.8896996974945068
+dynamorio/build/suite/tests/bin/linux.signal0111,3500209,1,1,0,32768,32768,1,0,0.99999971430285617,2.8569714388565255e-07,28408,3.0167653560638428
+dynamorio/build/suite/tests/bin/linux.signal1000,500139,1,0,0,0,0,1,1,1,0,28256,0.879096269607544
+dynamorio/build/suite/tests/bin/linux.signal1001,3500175,1,0,0,0,0,1,0,1,0,28360,0.9202113151550293
+dynamorio/build/suite/tests/bin/linux.signal1010,500164,1,1,1,16384,16384,1,1,0.99999800065978228,1.9993402177281499e-06,28464,0.9673960208892822
+dynamorio/build/suite/tests/bin/linux.signal1011,3500211,1,1,0,32768,32768,1,1,0.99999971430301937,2.8569698064002982e-07,28520,3.0114307403564453
+dynamorio/build/suite/tests/bin/linux.signal1100,500141,1,0,0,0,0,1,1,1,0,28256,2.686523199081421
+dynamorio/build/suite/tests/bin/linux.signal1101,3500177,1,0,0,0,0,1,0,1,0,28360,1.9085400104522705
+dynamorio/build/suite/tests/bin/linux.signal1110,500166,1,1,1,16384,16384,1,1,0.999998000667777,1.9993322230375055e-06,28464,2.4674909114837646
+dynamorio/build/suite/tests/bin/linux.signal1111,3500213,1,1,0,32768,32768,1,1,0.99999971430318257,2.856968173945936e-07,28520,4.512998580932617
+dynamorio/build/suite/tests/bin/linux.sigplain000,500082,1,0,0,0,0,1,0,1,0,28072,0.9244160652160645
+dynamorio/build/suite/tests/bin/linux.sigplain001,3500108,1,0,0,0,0,1,0,1,0,28176,3.7951600551605225
+dynamorio/build/suite/tests/bin/linux.sigplain010,500101,1,1,1,16384,16384,1,0,0.99999800040791675,1.999592083215024e-06,28280,1.811906099319458
+dynamorio/build/suite/tests/bin/linux.sigplain011,3500135,1,1,0,32768,32768,1,0,0.99999971429681589,2.8570318410484619e-07,28336,3.8170931339263916
+dynamorio/build/suite/tests/bin/linux.sigplain100,500084,1,0,0,0,0,1,0,1,0,28072,1.5100979804992676
+dynamorio/build/suite/tests/bin/linux.sigplain101,3500110,1,0,0,0,0,1,0,1,0,28176,3.5092623233795166
+dynamorio/build/suite/tests/bin/linux.sigplain110,500103,1,1,1,16384,16384,1,0,0.99999800041591347,1.9995840865100061e-06,28280,2.6552791595458984
+dynamorio/build/suite/tests/bin/linux.sigplain111,3500137,1,1,0,32768,32768,1,0,0.9999997142969792,2.8570302085232068e-07,28336,4.382765531539917
+dynamorio/build/suite/tests/bin/linux.sigaction,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,27976,1.9777858257293701
+dynamorio/build/suite/tests/bin/linux.syscall_pwait,3344,1,13,13,74368,5720.6153846153848,1,4,0.99612749478701224,0.0038725052129877867,59512,51.04833984375
+dynamorio/build/suite/tests/bin/linux.sigaction_nosignals,280161,1,3,3,571,190.33333333333334,1,0,0.99998929198612241,1.0708013877585985e-05,36960,0.729128360748291
+dynamorio/build/suite/tests/bin/linux.sigcontext,296,1,3,3,584,194.66666666666666,1,0,0.98996655518394649,0.010033444816053512,27760,0.5339033603668213
+dynamorio/build/suite/tests/bin/linux.thread,304,1,3,3,533,177.66666666666666,1,2,0.99022801302931596,0.0097719869706840382,27888,0.6228644847869873
+dynamorio/build/suite/tests/bin/linux.threadexit,241,1,3,3,544,181.33333333333334,1,2,0.98770491803278693,0.012295081967213115,27896,0.6614713668823242
+dynamorio/build/suite/tests/bin/linux.threadexit2,358,1,3,3,547,182.33333333333334,1,1,0.99168975069252074,0.0083102493074792248,27896,0.6927576065063477
+dynamorio/build/suite/tests/bin/linux.signalfd,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,28112,1200.0930161476135
+dynamorio/build/suite/tests/bin/linux.alarm,35,1,0,0,0,0,1,0,1,0,27888,10.76303744316101
+dynamorio/build/suite/tests/bin/linux.signal_race,50033,1,0,0,0,0,1,0,1,0,28088,20.36661410331726
+dynamorio/build/suite/tests/bin/linux.signal_racesys,89675,1,0,0,0,0,1,0,1,0,28264,1.2162351608276367
+dynamorio/build/suite/tests/bin/linux.signal_pre_syscall,100444,1,0,0,0,0,1,0,1,0,28136,1.908033847808838
+dynamorio/build/suite/tests/bin/linux.bad-signal-stack,72,1,4,3,33338,8334.5,1,4,0.94736842105263153,0.052631578947368418,27976,0.9298088550567627
+dynamorio/build/suite/tests/bin/linux.eintr,103,1,1,1,272,272,1,0,0.99038461538461542,0.0096153846153846159,32864,2.770580530166626
+dynamorio/build/suite/tests/bin/linux.sigsuspend,121,1,8,8,4382,547.75,1,0,0.93798449612403101,0.062015503875968991,32984,1.3207111358642578
+dynamorio/build/suite/tests/bin/linux.signest,4598,1,5,5,656,131.19999999999999,1,0,0.99891375190093412,0.0010862480990658267,32736,103.67482781410217
+dynamorio/build/suite/tests/bin/linux.sigmask,322,1,10,10,4574,457.39999999999998,1,0,0.96987951807228912,0.030120481927710843,33392,1.016467809677124
+dynamorio/build/suite/tests/bin/linux.mangle_asynch,4100,1,8,8,2176,272,1,0,0.99805258033106137,0.0019474196689386564,28312,21.516639232635498
+dynamorio/build/suite/tests/bin/linux.app_tls,20,1,0,0,0,0,1,0,1,0,27856,0.8743386268615723
+dynamorio/build/suite/tests/bin/linux.readlink,31,1,0,0,0,0,1,34,1,0,28024,0.5510861873626709
+dynamorio/build/suite/tests/bin/linux.fib-conflict,93400776,1,0,0,0,0,1,0,1,0,27792,3.013716459274292

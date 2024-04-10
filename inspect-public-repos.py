@@ -87,14 +87,78 @@ def main() -> int:
     if len(sys.argv) != 2:
         raise RuntimeError("wrong arguments: path to result file is required")
     result_directory = sys.argv[1]
+    # fmt
     inspect_executables_for_repository(
         inspector_exec,
         collect_executables_from_directories_recursively(
-            ["path/to/exmaple/executables"],
-            skip=["path/to/skip"],
-            ignored_substrings=["debug"]
+            ["./repos/c++/fmt/build/bin"],
         ),
-        "example",
+        "fmt",
+        result_directory
+    )
+    # spdlog
+    inspect_executables_for_repository(
+        inspector_exec,
+        ["./repos/c++/spdlog/build/tests/spdlog-utests",
+         "./repos/c++/spdlog/build/example/example"],
+        "spdlog",
+        result_directory
+    )
+    # leveldb
+    inspect_executables_for_repository(
+        inspector_exec,
+        ["./repos/c++/leveldb/build/db_bench",
+         "./repos/c++/leveldb/build/c_test",
+         "./repos/c++/leveldb/build/env_posix_test"],
+        "leveldb",
+        result_directory
+    )
+    # openssl
+    inspect_executables_for_repository(
+        inspector_exec,
+        collect_executables_from_directories_recursively(
+            ["./repos/c/openssl/test"],
+            skip=["./repos/c/openssl/test/ecstresstest"],
+        ),
+        "openssl",
+        result_directory
+    )
+    # dynamorio
+    inspect_executables_for_repository(
+        inspector_exec,
+        collect_executables_from_directories_recursively(
+            ["./repos/c/dynamorio/build/suite/tests/bin/"],
+            ignored_substrings=[".debug"]
+        ),
+        "dynamorio",
+        result_directory
+    )
+    # jq
+    inspect_executables_for_repository(
+        inspector_exec,
+        ["./repos/c/jq/tests/1_run_mantest",
+         "./repos/c/jq/tests/1_run_jqtest"],
+        "jq",
+        result_directory
+    )
+    # cJSON
+    cJSON_execs = collect_executables_from_directories_recursively(
+        ["./repos/c/cJSON/build/tests"]
+    )
+    cJSON_execs.append("./repos/c/cJSON/build/cJSON_test")
+    inspect_executables_for_repository(
+        inspector_exec,
+        cJSON_execs,
+        "cJSON",
+        result_directory
+    )
+    # mimalloc
+    inspect_executables_for_repository(
+        inspector_exec,
+        ["./repos/c/mimalloc/out/release/mimalloc-test-api-fill",
+         "./repos/c/mimalloc/out/release/mimalloc-test-api",
+         "./repos/c/mimalloc/out/release/mimalloc-test-stress"],
+        "mimalloc",
         result_directory
     )
 
