@@ -5,6 +5,7 @@ import csv
 from io import StringIO
 import time
 import copy
+import re
 
 
 def is_executable(file):
@@ -23,7 +24,8 @@ def name_contains_any_of(name, contains):
     return False
 
 
-def collect_executables_from_directories_recursively(directories, skip=None, ignored_substrings=None):
+def collect_executables_from_directories(directories, accepted_substring=None, skip=None, ignored_substrings=None,
+                                         collect_recursively=True):
     if ignored_substrings is None:
         ignored_substrings = []
     if skip is None:
@@ -33,11 +35,15 @@ def collect_executables_from_directories_recursively(directories, skip=None, ign
         for filename in os.listdir(directory):
             abs_path = os.path.join(directory, filename)
             if os.path.isdir(abs_path):
-                paths.extend(collect_executables_from_directories_recursively([abs_path]))
-            elif is_executable(abs_path):
-                if abs_path not in skip and not name_contains_any_of(filename, ignored_substrings):
+                if collect_recursively:
+                    paths.extend(collect_executables_from_directories([abs_path]))
+                else:
+                    continue
+            elif is_executable(abs_path) and abs_path not in skip and not name_contains_any_of(filename, ignored_substrings):
+                if accepted_substring is None or name_contains_any_of(filename, accepted_substring):
                     paths.append(abs_path)
-    print(f"found {len(paths)} executables")
+    print(f"found {len(paths)} executables:")
+    print(paths)
     return paths
 
 
@@ -90,7 +96,7 @@ def main() -> int:
     # fmt
     inspect_executables_for_repository(
         inspector_exec,
-        collect_executables_from_directories_recursively(
+        collect_executables_from_directories(
             ["./repos/c++/fmt/build/bin"],
         ),
         "fmt",
@@ -113,10 +119,38 @@ def main() -> int:
         "leveldb",
         result_directory
     )
+    # json
+    inspect_executables_for_repository(
+        inspector_exec,
+        collect_executables_from_directories(
+            ["./repos/c++/json/build/tests"],
+            collect_recursively=False
+        ),
+        "json",
+        result_directory
+    )
+    # MyTinySTL - unexpected valgrind error (mb timeout)
+    inspect_executables_for_repository(
+        inspector_exec,
+        ["./repos/c++/MyTinySTL/bin/stltest"],
+        "MyTinySTL",
+        result_directory
+    )
+    # benchmark
+    inspect_executables_for_repository(
+        inspector_exec,
+        collect_executables_from_directories(
+            ["./repos/c++/benchmark/build/test"],
+            collect_recursively=False
+        ),
+        "benchmark",
+        result_directory
+    )
+
     # openssl
     inspect_executables_for_repository(
         inspector_exec,
-        collect_executables_from_directories_recursively(
+        collect_executables_from_directories(
             ["./repos/c/openssl/test"],
             skip=["./repos/c/openssl/test/ecstresstest"],
         ),
@@ -126,7 +160,7 @@ def main() -> int:
     # dynamorio
     inspect_executables_for_repository(
         inspector_exec,
-        collect_executables_from_directories_recursively(
+        collect_executables_from_directories(
             ["./repos/c/dynamorio/build/suite/tests/bin/"],
             ignored_substrings=[".debug"]
         ),
@@ -142,7 +176,7 @@ def main() -> int:
         result_directory
     )
     # cJSON
-    cJSON_execs = collect_executables_from_directories_recursively(
+    cJSON_execs = collect_executables_from_directories(
         ["./repos/c/cJSON/build/tests"]
     )
     cJSON_execs.append("./repos/c/cJSON/build/cJSON_test")
@@ -161,7 +195,54 @@ def main() -> int:
         "mimalloc",
         result_directory
     )
-
+    # nanomsg
+    inspect_executables_for_repository(
+        inspector_exec,
+        collect_executables_from_directories(
+            ["./repos/c/nanomsg/build"],
+            collect_recursively=False
+        ),
+        "nanomsg",
+        result_directory
+    )
+    # s2n-tls
+    inspect_executables_for_repository(
+        inspector_exec,
+        collect_executables_from_directories(
+            ["./repos/c/s2n-tls/build/bin"],
+            accepted_substring=["test"],
+            skip=["./repos/c/s2n-tls/build/bin/s2n_self_talk_client_hello_cb_test"]
+        ),
+        "s2n-tls",
+        result_directory
+    )
+    # libuv - 1200 timeout
+    inspect_executables_for_repository(
+        inspector_exec,
+        collect_executables_from_directories(
+            ["./repos/c/libuv/build"],
+            collect_recursively=False
+        ),
+        "libuv",
+        result_directory
+    )
+    # libevent - 1200 timeout
+    inspect_executables_for_repository(
+        inspector_exec,
+        collect_executables_from_directories(
+            ["./repos/c/libevent/build/bin"],
+            skip=["./repos/c/libevent/build/bin/dns-example",
+                  "./repos/c/libevent/build/bin/event-read-fifo",
+                  "./repos/c/libevent/build/bin/hello-world",
+                  "./repos/c/libevent/build/bin/http-connect",
+                  "./repos/c/libevent/build/bin/http-server",
+                  "./repos/c/libevent/build/bin/watch-timing",
+                  "./repos/c/libevent/build/bin/ws-chat-server"
+                  ]
+        ),
+        "libevent",
+        result_directory
+    )
     return 0
 
 

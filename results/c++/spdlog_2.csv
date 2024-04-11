@@ -1,0 +1,3 @@
+Executable,Stack Allocs,Stack Inspector Runs,Heap Allocs,Heap Frees,Summary Bytes Allocated,Average Bytes Per Allocation,Valgrind Runs,Valgrind Error Summary,Stack Allocs Fraction,Heap Allocs Fraction,Executable Size,Elapsed Time
+./repos/c++/spdlog/build/tests/spdlog-utests,4086060,33,169374,169374,17671754,104.33569497089282,33,0,0.96019818425100711,0.039801815748992934,2558728,78.37645316123962
+./repos/c++/spdlog/build/example/example,102465,1,17088,17088,4259331,249.25860252808988,1,0,0.85706757672329426,0.14293242327670572,688248,2.6477527618408203
