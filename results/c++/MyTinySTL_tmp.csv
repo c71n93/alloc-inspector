@@ -1,2 +1,0 @@
-Executable,Stack Allocs,Stack Inspector Runs,Heap Allocs,Heap Frees,Summary Bytes Allocated,Average Bytes Per Allocation,Valgrind Runs,Valgrind Error Summary,Stack Allocs Fraction,Heap Allocs Fraction,Executable Size,Elapsed Time
-./repos/c++/MyTinySTL/bin/stltest,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,valgrind parsing error,823256,1964.6351447105408
