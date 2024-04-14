@@ -24,7 +24,7 @@ int main(int argc, char* argv[]) {
     // TODO: add possibility to pass "-csv_result" flag as an argument
     bool csv_result = true;
     // TODO: add possibility to pass timelimit in seconds
-    int timelimit = 1200;
+    int timelimit = 1800;
     exec_result stack_inspector_result = exec(
         string_format(
             "timeout --signal=SIGKILL %d %s %s",
