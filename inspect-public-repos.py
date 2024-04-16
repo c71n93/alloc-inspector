@@ -5,7 +5,7 @@ import csv
 from io import StringIO
 import time
 import copy
-import re
+from common import header
 
 
 def is_executable(file):
@@ -51,16 +51,12 @@ def collect_executables_from_directories(directories, accepted_substrings=None, 
                 if accepted_substrings is None or name_contains_all_of(filename, accepted_substrings):
                     paths.append(abs_path)
     print(f"found {len(paths)} executables:")
-    print(paths)
     return paths
 
 
 def inspect_executables_for_repository(inspector_exec, executables, repository_name, result_directory):
     result_csv_file = open(os.path.join(result_directory, repository_name + ".csv"), "w")
     result_csv_writer = csv.writer(result_csv_file, delimiter=",")
-    header = ["Executable", "Stack Allocs", "Stack Inspector Runs", "Heap Allocs", "Heap Frees",
-              "Summary Bytes Allocated", "Average Bytes Per Allocation", "Valgrind Runs", "Valgrind Error Summary",
-              "Stack Allocs Fraction", "Heap Allocs Fraction", "Executable Size", "Elapsed Time"]
     result_csv_writer.writerow(header)
     retcode_to_error = {
         1: [["stack_inspector timeout" for _ in range(0, len(header) - 3)]],
