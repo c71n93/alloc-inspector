@@ -4,6 +4,12 @@ import pandas
 from common import header
 
 
+result_header = [
+    "Repository Name", "Num Of Executables", "AVG Heap Allocs Fraction", "AVG Stack Allocs", "SUM Stack Allocs",
+    "AVG Heap Allocs", "SUM Heap Allocs"
+]
+
+
 def process_single_repository_result(result_csv_filename):
     data = pandas.read_csv(result_csv_filename, index_col=header[0])
     data_clean = data.drop(["AVERAGE", "SUM"], errors="ignore").apply(pandas.to_numeric, errors="coerce")
@@ -21,9 +27,31 @@ def process_all_repositories_results_from_directory(directory, skip=None):
             process_single_repository_result(abs_path)
 
 
+def gather_final_result_for_directory(directory, final_filename, skip=None):
+    final_result = pandas.DataFrame(columns=result_header)
+    if skip is None:
+        skip = []
+    for filename in os.listdir(directory):
+        if filename not in skip:
+            abs_path = os.path.join(directory, filename)
+            single_result = pandas.read_csv(abs_path, index_col=header[0])
+            final_result.loc[len(final_result.index)] = [
+                filename.split(".")[0], len(single_result.index) - 2,
+                single_result.loc["AVERAGE"]["Heap Allocs Fraction"],
+                single_result.loc["AVERAGE"]["Stack Allocs"],
+                single_result.loc["SUM"]["Stack Allocs"],
+                single_result.loc["AVERAGE"]["Heap Allocs"],
+                single_result.loc["SUM"]["Heap Allocs"]
+            ]
+    final_result.to_csv(final_filename, index=False)
+
+
 def main() -> int:
-    process_all_repositories_results_from_directory("./results/c", skip=["final.csv"])
-    process_all_repositories_results_from_directory("./results/c++", skip=["final.csv"])
+    skip = ["final-old.csv", "final-c.csv", "final-c++.csv"]
+    process_all_repositories_results_from_directory("./results/c", skip=skip)
+    process_all_repositories_results_from_directory("./results/c++", skip=skip)
+    gather_final_result_for_directory("./results/c", "final-c.csv", skip=skip)
+    gather_final_result_for_directory("./results/c++", "final-c++.csv", skip=skip)
     return 0
 
 
