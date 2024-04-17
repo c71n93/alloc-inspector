@@ -1,3 +1,5 @@
 Executable,Stack Allocs,Stack Inspector Runs,Heap Allocs,Heap Frees,Summary Bytes Allocated,Average Bytes Per Allocation,Valgrind Runs,Valgrind Error Summary,Stack Allocs Fraction,Heap Allocs Fraction,Executable Size,Elapsed Time
-./repos/c/libevent/build/bin/signal-test,stack_inspector timeout,stack_inspector timeout,stack_inspector timeout,stack_inspector timeout,stack_inspector timeout,stack_inspector timeout,stack_inspector timeout,stack_inspector timeout,stack_inspector timeout,stack_inspector timeout,25416,1200.0345487594604
-./repos/c/libevent/build/bin/time-test,stack_inspector timeout,stack_inspector timeout,stack_inspector timeout,stack_inspector timeout,stack_inspector timeout,stack_inspector timeout,stack_inspector timeout,stack_inspector timeout,stack_inspector timeout,stack_inspector timeout,25760,1200.0163810253143
+./repos/c/libevent/build/bin/signal-test,stack_inspector timeout,stack_inspector timeout,stack_inspector timeout,stack_inspector timeout,stack_inspector timeout,stack_inspector timeout,stack_inspector timeout,stack_inspector timeout,stack_inspector timeout,stack_inspector timeout,25416.0,1200.0345487594604
+./repos/c/libevent/build/bin/time-test,stack_inspector timeout,stack_inspector timeout,stack_inspector timeout,stack_inspector timeout,stack_inspector timeout,stack_inspector timeout,stack_inspector timeout,stack_inspector timeout,stack_inspector timeout,stack_inspector timeout,25760.0,1200.0163810253143
+AVERAGE,,,,,,,,,,,25588.0,1200.0254648923874
+SUM,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,51176.0,2400.050929784775
