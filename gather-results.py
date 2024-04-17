@@ -28,9 +28,9 @@ def process_all_repositories_results_from_directory(directory, skip=None):
 
 
 def gather_final_result_for_directory(directory, final_filename, skip=None):
-    final_result = pandas.DataFrame(columns=result_header)
     if skip is None:
         skip = []
+    final_result = pandas.DataFrame(columns=result_header)
     for filename in os.listdir(directory):
         if filename not in skip:
             abs_path = os.path.join(directory, filename)
@@ -46,12 +46,31 @@ def gather_final_result_for_directory(directory, final_filename, skip=None):
     final_result.to_csv(final_filename, index=False)
 
 
+def gather_all_binaries_in_single_result(directory, final_filename, skip=None):
+    if skip is None:
+        skip = []
+    final_result = pandas.DataFrame(columns=header)
+    for filename in os.listdir(directory):
+        if filename not in skip:
+            abs_path = os.path.join(directory, filename)
+            single_result = pandas.read_csv(abs_path, index_col=header[0]).drop(["AVERAGE", "SUM"], errors="ignore")
+            if final_result.empty:
+                final_result = single_result
+            else:
+                final_result = pandas.concat([final_result, single_result])
+    final_result.to_csv(final_filename)
+
+
 def main() -> int:
     skip = ["final-old.csv", "final-c.csv", "final-c++.csv"]
     process_all_repositories_results_from_directory("./results/c", skip=skip)
     process_all_repositories_results_from_directory("./results/c++", skip=skip)
     gather_final_result_for_directory("./results/c", "final-c.csv", skip=skip)
     gather_final_result_for_directory("./results/c++", "final-c++.csv", skip=skip)
+    gather_all_binaries_in_single_result("./results/c", "summary-c.csv", skip=skip)
+    gather_all_binaries_in_single_result("./results/c++", "summary-c++.csv", skip=skip)
+    # print(pandas.read_csv("final-c.csv")["AVG Heap Allocs Fraction"].mean())
+    # print(pandas.read_csv("final-c++.csv")["AVG Heap Allocs Fraction"].mean())
     return 0
 
 
