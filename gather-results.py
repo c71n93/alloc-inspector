@@ -68,7 +68,8 @@ def gather_all_binaries_in_single_result(directory, final_filename, skip=None):
                 final_result = single_result
             else:
                 final_result = pandas.concat([final_result, single_result])
-    final_result["Status"] = final_result["Status"].astype("bool")
+    for index, row in final_result.iterrows():
+        final_result.loc[index, "Status"] = True if final_result.loc[index, "Status"] == "True" else False
     final_result.sort_values(by=["Status", "Executable"], ascending=False).to_csv(final_filename)
 
 
@@ -98,12 +99,12 @@ def combine_c_and_cpp_results(c_res_file, cpp_res_file, res_file):
 
 def main() -> int:
     skip = ["final-old.csv", "final-c.csv", "final-c++.csv", "summary-c.csv", "summary-c++.csv"]
-    add_status_to_results("./results/c", skip)
-    add_status_to_results("./results/c++", skip)
     process_all_repositories_results_from_directory("./results/c", skip=skip)
     process_all_repositories_results_from_directory("./results/c++", skip=skip)
     gather_final_result_for_directory("./results/c", "final-c.csv", skip=skip)
     gather_final_result_for_directory("./results/c++", "final-c++.csv", skip=skip)
+    add_status_to_results("./results/c", skip)
+    add_status_to_results("./results/c++", skip)
     gather_all_binaries_in_single_result("./results/c", "summary-c.csv", skip=skip)
     gather_all_binaries_in_single_result("./results/c++", "summary-c++.csv", skip=skip)
     combine_c_and_cpp_results("./results/c/summary-c.csv", "results/c++/summary-c++.csv", "results.csv")
