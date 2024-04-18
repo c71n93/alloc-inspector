@@ -4,8 +4,10 @@ import subprocess
 import csv
 from io import StringIO
 import time
-import copy
-from common import header
+from common import HEADER
+
+
+SIZE_OF_INSPECTOR_OUT = 10
 
 
 def is_executable(file):
@@ -57,13 +59,13 @@ def collect_executables_from_directories(directories, accepted_substrings=None, 
 def inspect_executables_for_repository(inspector_exec, executables, repository_name, result_directory):
     result_csv_file = open(os.path.join(result_directory, repository_name + ".csv"), "w")
     result_csv_writer = csv.writer(result_csv_file, delimiter=",")
-    result_csv_writer.writerow(header)
+    result_csv_writer.writerow(HEADER)
     retcode_to_error = {
-        1: [["stack_inspector timeout" for _ in range(0, len(header) - 3)]],
-        2: [["valgrind timeout" for _ in range(0, len(header) - 3)]],
-        3: [["stack_inspector parsing error" for _ in range(0, len(header) - 3)]],
-        4: [["valgrind parsing error" for _ in range(0, len(header) - 3)]],
-        "default": [["error" for _ in range(0, len(header) - 3)]]
+        1: "stack_inspector timeout",
+        2: "valgrind timeout",
+        3: "stack_inspector parsing error",
+        4: "valgrind parsing error",
+        "default": "error"
     }
     for executable in executables:
         print(f"inspecting: {executable}:")
@@ -75,18 +77,25 @@ def inspect_executables_for_repository(inspector_exec, executables, repository_n
         f = StringIO(inspector_process.stdout.decode("utf-8"))
         retcode = inspector_process.returncode
         res = list(csv.reader(f, delimiter=","))
+        status = True
         if retcode != 0:
             print(f"error: non zero exit code while inspecting {executable}")
             print(inspector_process.stderr.decode("utf-8"))
-            res = copy.deepcopy(retcode_to_error.copy().get(retcode, retcode_to_error.get("default")))
-        elif len(res) == 0:
+            res = [[
+                retcode_to_error.copy().get(retcode, retcode_to_error.get("default"))
+                for _ in range(SIZE_OF_INSPECTOR_OUT)
+            ]]
+            status = False
+        elif len(res) != SIZE_OF_INSPECTOR_OUT:
             print(f"error: something went wrong while inspecting {executable}")
             print(inspector_process.stderr.decode("utf-8"))
-            res = copy.deepcopy(retcode_to_error.get("default").copy())
+            res = [[retcode_to_error.copy().get("default") for _ in range(SIZE_OF_INSPECTOR_OUT)]]
+            status = False
         row = res[0]
         row.insert(0, executable)
         row.append(str(file_size))
         row.append(str(elapsed))
+        row.append(str(status))
         print(row[1:len(row)])
         result_csv_writer.writerow(row)
     result_csv_file.close()

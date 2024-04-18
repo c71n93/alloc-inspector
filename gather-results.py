@@ -1,7 +1,7 @@
 import os
 import sys
 import pandas
-from common import header
+from common import HEADER
 
 
 result_header = [
@@ -11,7 +11,7 @@ result_header = [
 
 
 def process_single_repository_result(result_csv_filename):
-    data = pandas.read_csv(result_csv_filename, index_col=header[0])
+    data = pandas.read_csv(result_csv_filename, index_col=HEADER[0])
     data_clean = data.drop(["AVERAGE", "SUM"], errors="ignore").apply(pandas.to_numeric, errors="coerce")
     data.loc["AVERAGE"] = data_clean.mean()
     data.loc["SUM"] = data_clean.sum()
@@ -34,7 +34,7 @@ def gather_final_result_for_directory(directory, final_filename, skip=None):
     for filename in os.listdir(directory):
         if filename not in skip:
             abs_path = os.path.join(directory, filename)
-            single_result = pandas.read_csv(abs_path, index_col=header[0])
+            single_result = pandas.read_csv(abs_path, index_col=HEADER[0])
             final_result.loc[len(final_result.index)] = [
                 filename.split(".")[0], len(single_result.index) - 2,
                 single_result.loc["AVERAGE"]["Heap Allocs Fraction"],
@@ -49,11 +49,11 @@ def gather_final_result_for_directory(directory, final_filename, skip=None):
 def gather_all_binaries_in_single_result(directory, final_filename, skip=None):
     if skip is None:
         skip = []
-    final_result = pandas.DataFrame(columns=header)
+    final_result = pandas.DataFrame(columns=HEADER)
     for filename in os.listdir(directory):
         if filename not in skip:
             abs_path = os.path.join(directory, filename)
-            single_result = pandas.read_csv(abs_path, index_col=header[0]).drop(["AVERAGE", "SUM"], errors="ignore")
+            single_result = pandas.read_csv(abs_path, index_col=HEADER[0]).drop(["AVERAGE", "SUM"], errors="ignore")
             if final_result.empty:
                 final_result = single_result
             else:
@@ -62,7 +62,7 @@ def gather_all_binaries_in_single_result(directory, final_filename, skip=None):
 
 
 def main() -> int:
-    skip = ["final-old.csv", "final-c.csv", "final-c++.csv"]
+    skip = ["final-old.csv", "final-c.csv", "final-c++.csv", "summary-c.csv", "summary-c++.csv"]
     process_all_repositories_results_from_directory("./results/c", skip=skip)
     process_all_repositories_results_from_directory("./results/c++", skip=skip)
     gather_final_result_for_directory("./results/c", "final-c.csv", skip=skip)
