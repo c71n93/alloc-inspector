@@ -85,7 +85,16 @@ def add_status_to_results(directory, skip=None):
                     single_result.loc[index, "Status"] = True
                 else:
                     single_result.loc[index, "Status"] = False
-            single_result.sort_values(by="Status").to_csv(abs_path)
+            single_result.to_csv(abs_path)
+
+
+def combine_c_and_cpp_results(c_res_file, cpp_res_file, res_file):
+    c_dataframe = pandas.read_csv(c_res_file, index_col=HEADER[0])
+    c_dataframe["Language"] = "C"
+    cpp_dataframe = pandas.read_csv(cpp_res_file, index_col=HEADER[0])
+    cpp_dataframe["Language"] = "C++"
+    final = pandas.concat([c_dataframe, cpp_dataframe])
+    final.to_csv(res_file)
 
 
 def main() -> int:
@@ -98,8 +107,7 @@ def main() -> int:
     gather_final_result_for_directory("./results/c++", "final-c++.csv", skip=skip)
     gather_all_binaries_in_single_result("./results/c", "summary-c.csv", skip=skip)
     gather_all_binaries_in_single_result("./results/c++", "summary-c++.csv", skip=skip)
-    print(pandas.read_csv("final-c.csv")["AVG Heap Allocs Fraction"].mean())
-    print(pandas.read_csv("final-c++.csv")["AVG Heap Allocs Fraction"].mean())
+    combine_c_and_cpp_results("./results/c/summary-c.csv", "results/c++/summary-c++.csv", "results.csv")
     return 0
 
 
