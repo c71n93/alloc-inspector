@@ -93,8 +93,7 @@ def combine_c_and_cpp_results(c_res_file, cpp_res_file, res_file):
     c_dataframe["Language"] = "C"
     cpp_dataframe = pandas.read_csv(cpp_res_file, index_col=HEADER[0])
     cpp_dataframe["Language"] = "C++"
-    final = pandas.concat([c_dataframe, cpp_dataframe])
-    final.to_csv(res_file)
+    pandas.concat([cpp_dataframe, c_dataframe]).to_csv(res_file)
 
 
 def main() -> int:
