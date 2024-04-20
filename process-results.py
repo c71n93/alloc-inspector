@@ -3,7 +3,6 @@ import sys
 import pandas
 from common import HEADER
 
-
 result_header = [
     "Repository Name", "Num Of Executables", "AVG Heap Allocs Fraction", "AVG Stack Allocs", "SUM Stack Allocs",
     "AVG Heap Allocs", "SUM Heap Allocs"
@@ -107,24 +106,21 @@ def main() -> int:
     add_status_to_results("./results/c++", skip)
     gather_all_binaries_in_single_result("./results/c", "summary-c.csv", skip=skip)
     gather_all_binaries_in_single_result("./results/c++", "summary-c++.csv", skip=skip)
-    combine_c_and_cpp_results("./results/c/summary-c.csv", "results/c++/summary-c++.csv", "results.csv")
-    # result = pandas.read_csv(
-    #     "./results-withou-errors.csv",
-    #     index_col=HEADER[0]
-    # ).drop(["AVERAGE", "SUM"], errors="ignore")
-    # heap_fraction = "Heap Allocs Fraction"
-    # heap_allocs = "Heap Allocs"
-    # stack_allocs = "Stack Allocs"
-    # executable_size = "Executable Size"
-    # summary_allocated = "Summary Bytes Allocated"
-    # corr1 = result[heap_fraction].corr(result[summary_allocated])
-    # corr2 = result[heap_fraction].corr(result[executable_size])
-    # corr3 = result[heap_allocs].corr(result[executable_size])
-    # corr4 = result[stack_allocs].corr(result[executable_size])
-    # print(corr1)
-    # print(corr2)
-    # print(corr3)
-    # print(corr4)
+    # combine_c_and_cpp_results("./results/c/summary-c.csv", "results/c++/summary-c++.csv", "results.csv")
+    result = pandas.read_csv(
+        "./results/c++/summary-c++.csv",
+        index_col=HEADER[0]
+    ).drop(["AVERAGE", "SUM"], errors="ignore")
+    result_no_errors = result[result["Status"] == True]
+    heap_fraction = "Heap Allocs Fraction"
+    heap_allocs = "Heap Allocs"
+    stack_allocs = "Stack Allocs"
+    executable_size = "Executable Size"
+    summary_allocated = "Summary Bytes Allocated"
+    print(result_no_errors[heap_fraction].corr(result_no_errors[summary_allocated]))
+    print(result_no_errors[heap_fraction].corr(result_no_errors[executable_size]))
+    print(result_no_errors[heap_allocs].corr(result_no_errors[executable_size]))
+    print(result_no_errors[stack_allocs].corr(result_no_errors[executable_size]))
     return 0
 
 

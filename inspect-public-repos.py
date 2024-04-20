@@ -70,7 +70,10 @@ def inspect_executables_for_repository(inspector_exec, executables, repository_n
     for executable in executables:
         print(f"inspecting: {executable}:")
         start = time.time()
-        inspector_process = subprocess.run([os.path.abspath(inspector_exec), executable], capture_output=True)
+        inspector_process = subprocess.run(
+            [os.path.abspath(inspector_exec), os.path.abspath(executable)],
+            capture_output=True
+        )
         end = time.time()
         file_size = os.stat(executable).st_size
         elapsed = end - start
@@ -86,7 +89,7 @@ def inspect_executables_for_repository(inspector_exec, executables, repository_n
                 for _ in range(SIZE_OF_INSPECTOR_OUT)
             ]]
             status = False
-        elif len(res) != SIZE_OF_INSPECTOR_OUT:
+        elif len(res) == 0 or len(res[0]) != 10:
             print(f"error: something went wrong while inspecting {executable}")
             print(inspector_process.stderr.decode("utf-8"))
             res = [[retcode_to_error.copy().get("default") for _ in range(SIZE_OF_INSPECTOR_OUT)]]
