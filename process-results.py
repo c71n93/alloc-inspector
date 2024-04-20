@@ -20,7 +20,7 @@ def is_float(element: any) -> bool:
         return False
 
 
-def process_single_repository_result(result_csv_filename):
+def find_avg_and_sum_for_single_result(result_csv_filename):
     data = pandas.read_csv(result_csv_filename, index_col=HEADER[0])
     data_clean = data.drop(["AVERAGE", "SUM"], errors="ignore").apply(pandas.to_numeric, errors="coerce")
     data.loc["AVERAGE"] = data_clean.mean()
@@ -28,13 +28,13 @@ def process_single_repository_result(result_csv_filename):
     data.to_csv(result_csv_filename)
 
 
-def process_all_repositories_results_from_directory(directory, skip=None):
+def find_avg_and_sum_for_all_results_from_directory(directory, skip=None):
     if skip is None:
         skip = []
     for filename in os.listdir(directory):
         if filename not in skip:
             abs_path = os.path.join(directory, filename)
-            process_single_repository_result(abs_path)
+            find_avg_and_sum_for_single_result(abs_path)
 
 
 def gather_final_result_for_directory(directory, final_filename, skip=None):
@@ -98,9 +98,9 @@ def combine_c_and_cpp_results(c_res_file, cpp_res_file, res_file):
 
 
 def main() -> int:
-    skip = ["final-old.csv", "final-c.csv", "final-c++.csv", "summary-c.csv", "summary-c++.csv"]
-    process_all_repositories_results_from_directory("./results/c", skip=skip)
-    process_all_repositories_results_from_directory("./results/c++", skip=skip)
+    skip = ["final-old.csv", "final-c.csv", "final-c++.csv", "summary-c.csv", "summary-c++.csv", "dynamorio.csv"]
+    find_avg_and_sum_for_all_results_from_directory("./results/c", skip=skip)
+    find_avg_and_sum_for_all_results_from_directory("./results/c++", skip=skip)
     gather_final_result_for_directory("./results/c", "final-c.csv", skip=skip)
     gather_final_result_for_directory("./results/c++", "final-c++.csv", skip=skip)
     add_status_to_results("./results/c", skip)
@@ -108,6 +108,23 @@ def main() -> int:
     gather_all_binaries_in_single_result("./results/c", "summary-c.csv", skip=skip)
     gather_all_binaries_in_single_result("./results/c++", "summary-c++.csv", skip=skip)
     combine_c_and_cpp_results("./results/c/summary-c.csv", "results/c++/summary-c++.csv", "results.csv")
+    # result = pandas.read_csv(
+    #     "./results-withou-errors.csv",
+    #     index_col=HEADER[0]
+    # ).drop(["AVERAGE", "SUM"], errors="ignore")
+    # heap_fraction = "Heap Allocs Fraction"
+    # heap_allocs = "Heap Allocs"
+    # stack_allocs = "Stack Allocs"
+    # executable_size = "Executable Size"
+    # summary_allocated = "Summary Bytes Allocated"
+    # corr1 = result[heap_fraction].corr(result[summary_allocated])
+    # corr2 = result[heap_fraction].corr(result[executable_size])
+    # corr3 = result[heap_allocs].corr(result[executable_size])
+    # corr4 = result[stack_allocs].corr(result[executable_size])
+    # print(corr1)
+    # print(corr2)
+    # print(corr3)
+    # print(corr4)
     return 0
 
 
