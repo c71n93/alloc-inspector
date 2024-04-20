@@ -4,8 +4,8 @@ if(NOT DEFINED DYNAMORIO_HOME)
         set(DYNAMORIO_HOME $ENV{DYNAMORIO_HOME})
     else()
         message(
-                FATAL_ERROR
-                "The DYNAMORIO_HOME variable must be specified via -D or via the environment variable of the same name"
+            FATAL_ERROR
+            "The DYNAMORIO_HOME variable must be specified via -D or via the environment variable of the same name"
         )
     endif()
 endif(NOT DEFINED DYNAMORIO_HOME)
@@ -25,9 +25,8 @@ add_executable(stack_inspector_exec src/main.cpp)
 add_dependencies(stack_inspector_exec stack_inspector)
 
 target_compile_definitions(stack_inspector_exec
-        PUBLIC DRRUN_EXECUTABLE="${DRRUN_EXECUTABLE}"
-        PUBLIC STACK_INSPECTOR="$<TARGET_FILE:stack_inspector>"
+    PUBLIC DRRUN_EXECUTABLE="${DRRUN_EXECUTABLE}"
+    PUBLIC STACK_INSPECTOR="$<TARGET_FILE:stack_inspector>"
 )
-
 
 add_subdirectory(test)
