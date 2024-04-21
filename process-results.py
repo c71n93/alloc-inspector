@@ -87,36 +87,55 @@ def column_to_bool(dataframe, column_name):
     dataframe[column_name] = dataframe[column_name].astype(bool)
 
 
-def TMP_replace(path_to_csv):
-    dataframe = pandas.read_csv(path_to_csv, index_col=HEADER[0])
-    for index, row in dataframe.iterrows():
-        dataframe.loc[index, "Status"] = True if dataframe.loc[index, "Status"] == 1.0 else False
-    dataframe.to_csv(path_to_csv)
+def find_correlations(result_csv_filename):
+    result = pandas.read_csv(
+        result_csv_filename,
+        index_col=HEADER[0]
+    ).drop(["AVERAGE", "SUM"], errors="ignore")
+    column_to_bool(result, "Status")
+    result_no_errors = result[result["Status"] == True]
+    heap_fraction = "Heap Allocs Fraction"
+    heap_allocs = "Heap Allocs"
+    stack_allocs = "Stack Allocs"
+    executable_size = "Executable Size"
+    summary_allocated = "Summary Bytes Allocated"
+    print("Correlations for file", result_csv_filename, sep=": ")
+    print(
+        heap_fraction + " and " + summary_allocated,
+        result_no_errors[heap_fraction].corr(result_no_errors[summary_allocated]),
+        sep=": "
+    )
+    print(
+        heap_fraction + " and " + executable_size,
+        result_no_errors[heap_fraction].corr(result_no_errors[executable_size]),
+        sep=": "
+    )
+    print(
+        heap_allocs + " and " + executable_size,
+        result_no_errors[heap_allocs].corr(result_no_errors[executable_size]),
+        sep=": "
+    )
+    print(
+        stack_allocs + " and " + executable_size,
+        result_no_errors[stack_allocs].corr(result_no_errors[executable_size]),
+        sep=": "
+    )
 
 
 def main() -> int:
     skip = ["final-old.csv", "final-c.csv", "final-c++.csv", "summary-c.csv", "summary-c++.csv", "s2n-tls-old.csv"]
-    find_avg_and_sum_for_all_results_from_directory("./results/c", skip=skip)
-    find_avg_and_sum_for_all_results_from_directory("./results/c++", skip=skip)
-    gather_final_result_for_directory("./results/c", "final-c.csv", skip=skip)
-    gather_final_result_for_directory("./results/c++", "final-c++.csv", skip=skip)
-    gather_all_binaries_in_single_result("./results/c", "summary-c.csv", skip=skip)
-    gather_all_binaries_in_single_result("./results/c++", "summary-c++.csv", skip=skip)
+    # find_avg_and_sum_for_all_results_from_directory("./results/c", skip=skip)
+    # find_avg_and_sum_for_all_results_from_directory("./results/c++", skip=skip)
+    # gather_final_result_for_directory("./results/c", "final-c.csv", skip=skip)
+    # gather_final_result_for_directory("./results/c++", "final-c++.csv", skip=skip)
+    # gather_all_binaries_in_single_result("./results/c", "summary-c.csv", skip=skip)
+    # gather_all_binaries_in_single_result("./results/c++", "summary-c++.csv", skip=skip)
     # combine_c_and_cpp_results("./results/c/summary-c.csv", "results/c++/summary-c++.csv", "results.csv")
-    # result = pandas.read_csv(
-    #     "./results/c++/summary-c++.csv",
-    #     index_col=HEADER[0]
-    # ).drop(["AVERAGE", "SUM"], errors="ignore")
-    # result_no_errors = result[result["Status"] == True]
-    # heap_fraction = "Heap Allocs Fraction"
-    # heap_allocs = "Heap Allocs"
-    # stack_allocs = "Stack Allocs"
-    # executable_size = "Executable Size"
-    # summary_allocated = "Summary Bytes Allocated"
-    # print(result_no_errors[heap_fraction].corr(result_no_errors[summary_allocated]))
-    # print(result_no_errors[heap_fraction].corr(result_no_errors[executable_size]))
-    # print(result_no_errors[heap_allocs].corr(result_no_errors[executable_size]))
-    # print(result_no_errors[stack_allocs].corr(result_no_errors[executable_size]))
+
+    find_correlations("results/c/summary-c.csv")
+    find_correlations("results/c++/summary-c++.csv")
+    find_correlations("results/results.csv")
+
     return 0
 
 
