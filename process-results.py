@@ -21,7 +21,7 @@ def is_float(element: any) -> bool:
 
 def find_avg_and_sum_for_single_result(result_csv_filename):
     data = pandas.read_csv(result_csv_filename, index_col=HEADER[0])
-    data_clean = data.drop(["AVERAGE", "SUM"], errors="ignore").apply(pandas.to_numeric, errors="coerce")
+    data_clean = data.drop(["AVERAGE", "SUM"], errors="ignore").drop(columns=["Reason"], errors="ignore")
     column_to_bool(data_clean, "Status")
     data_without_errors = data_clean[data_clean["Status"] == True]
     data.loc["AVERAGE"] = data_without_errors.mean()
@@ -85,6 +85,13 @@ def column_to_bool(dataframe, column_name):
     for index, row in dataframe.iterrows():
         dataframe.loc[index, column_name] = True if str(dataframe.loc[index, column_name]) == "True" else False
     dataframe[column_name] = dataframe[column_name].astype(bool)
+
+
+def TMP_replace(path_to_csv):
+    dataframe = pandas.read_csv(path_to_csv, index_col=HEADER[0])
+    for index, row in dataframe.iterrows():
+        dataframe.loc[index, "Status"] = True if dataframe.loc[index, "Status"] == 1.0 else False
+    dataframe.to_csv(path_to_csv)
 
 
 def main() -> int:
