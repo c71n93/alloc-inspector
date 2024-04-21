@@ -109,283 +109,255 @@ def main() -> int:
     if len(sys.argv) != 2:
         raise RuntimeError("wrong arguments: path to result file is required")
     result_directory = sys.argv[1]
-    # fmt
-    inspect_executables_for_repository(
-        inspector_exec,
-        collect_executables_from_directories(
-            ["./repos/c++/fmt/build/bin"],
-        ),
-        "fmt",
-        result_directory
-    )
-    # spdlog
-    inspect_executables_for_repository(
-        inspector_exec,
-        ["./repos/c++/spdlog/build/tests/spdlog-utests",
-         "./repos/c++/spdlog/build/example/example"],
-        "spdlog",
-        result_directory
-    )
-    # leveldb
-    inspect_executables_for_repository(
-        inspector_exec,
-        ["./repos/c++/leveldb/build/db_bench",
-         "./repos/c++/leveldb/build/c_test",
-         "./repos/c++/leveldb/build/env_posix_test"],
-        "leveldb",
-        result_directory
-    )
-    # json
-    inspect_executables_for_repository(
-        inspector_exec,
-        collect_executables_from_directories(
-            ["./repos/c++/json/build/tests"],
-            collect_recursively=False
-        ),
-        "json",
-        result_directory
-    )
-    # MyTinySTL - unexpected valgrind error (mb timeout)
-    inspect_executables_for_repository(
-        inspector_exec,
-        ["./repos/c++/MyTinySTL/bin/stltest"],
-        "MyTinySTL",
-        result_directory
-    )
-    # benchmark
-    inspect_executables_for_repository(
-        inspector_exec,
-        collect_executables_from_directories(
-            ["./repos/c++/benchmark/build/test"],
-            collect_recursively=False
-        ),
-        "benchmark",
-        result_directory
-    )
-    # OpenCC
-    inspect_executables_for_repository(
-        inspector_exec,
-        collect_executables_from_directories(
-            ["./repos/c++/OpenCC/build/dbg/src"],
-            collect_recursively=False,
-            accepted_substrings=["Test"]
-        ),
-        "OpenCC",
-        result_directory
-    )
-    # glog
-    inspect_executables_for_repository(
-        inspector_exec,
-        collect_executables_from_directories(
-            ["./repos/c++/glog/build"],
-            collect_recursively=False,
-            accepted_substrings=["test"]
-        ),
-        "glog",
-        result_directory
-    )
-    # snappy - not suitable
-    inspect_executables_for_repository(
-        inspector_exec,
-        ["./repos/c++/snappy/build/snappy_unittest"],
-        "snappy",
-        result_directory
-    )
-    # yaml-cpp
-    inspect_executables_for_repository(
-        inspector_exec,
-        ["./repos/c++/yaml-cpp/build/test/yaml-cpp-tests"],
-        "yaml-cpp",
-        result_directory
-    )
-    # magic_enum
-    inspect_executables_for_repository(
-        inspector_exec,
-        collect_executables_from_directories(
-            ["./repos/c++/magic_enum/build/test",
-             "./repos/c++/magic_enum/build/example"],
-            collect_recursively=False
-        ),
-        "magic_enum",
-        result_directory
-    )
-
-    # openssl
-    inspect_executables_for_repository(
-        inspector_exec,
-        collect_executables_from_directories(
-            ["./repos/c/openssl/test"],
-            skip=["./repos/c/openssl/test/ecstresstest"],
-        ),
-        "openssl",
-        result_directory
-    )
-    # dynamorio
-    inspect_executables_for_repository(
-        inspector_exec,
-        collect_executables_from_directories(
-            ["./repos/c/dynamorio/build/suite/tests/bin/"],
-            ignored_substrings=[".debug"]
-        ),
-        "dynamorio",
-        result_directory
-    )
-    # jq
-    inspect_executables_for_repository(
-        inspector_exec,
-        ["./repos/c/jq/tests/1_run_mantest",
-         "./repos/c/jq/tests/1_run_jqtest"],
-        "jq",
-        result_directory
-    )
-    # cJSON
-    cJSON_execs = collect_executables_from_directories(
-        ["./repos/c/cJSON/build/tests"]
-    )
-    cJSON_execs.append("./repos/c/cJSON/build/cJSON_test")
-    inspect_executables_for_repository(
-        inspector_exec,
-        cJSON_execs,
-        "cJSON",
-        result_directory
-    )
-    # mimalloc
-    inspect_executables_for_repository(
-        inspector_exec,
-        ["./repos/c/mimalloc/out/release/mimalloc-test-api-fill",
-         "./repos/c/mimalloc/out/release/mimalloc-test-api",
-         "./repos/c/mimalloc/out/release/mimalloc-test-stress"],
-        "mimalloc",
-        result_directory
-    )
-    # nanomsg
-    inspect_executables_for_repository(
-        inspector_exec,
-        collect_executables_from_directories(
-            ["./repos/c/nanomsg/build"],
-            collect_recursively=False
-        ),
-        "nanomsg",
-        result_directory
-    )
+    # # fmt
+    # inspect_executables_for_repository(
+    #     inspector_exec,
+    #     collect_executables_from_directories(
+    #         ["./repos/c++/fmt/build/bin"],
+    #     ),
+    #     "fmt",
+    #     result_directory
+    # )
+    # # spdlog
+    # inspect_executables_for_repository(
+    #     inspector_exec,
+    #     ["./repos/c++/spdlog/build/tests/spdlog-utests",
+    #      "./repos/c++/spdlog/build/example/example"],
+    #     "spdlog",
+    #     result_directory
+    # )
+    # # leveldb
+    # inspect_executables_for_repository(
+    #     inspector_exec,
+    #     ["./repos/c++/leveldb/build/db_bench",
+    #      "./repos/c++/leveldb/build/c_test",
+    #      "./repos/c++/leveldb/build/env_posix_test"],
+    #     "leveldb",
+    #     result_directory
+    # )
+    # # json
+    # inspect_executables_for_repository(
+    #     inspector_exec,
+    #     collect_executables_from_directories(
+    #         ["./repos/c++/json/build/tests"],
+    #         collect_recursively=False
+    #     ),
+    #     "json",
+    #     result_directory
+    # )
+    # # MyTinySTL - unexpected valgrind error (mb timeout)
+    # inspect_executables_for_repository(
+    #     inspector_exec,
+    #     ["./repos/c++/MyTinySTL/bin/stltest"],
+    #     "MyTinySTL",
+    #     result_directory
+    # )
+    # # benchmark
+    # inspect_executables_for_repository(
+    #     inspector_exec,
+    #     collect_executables_from_directories(
+    #         ["./repos/c++/benchmark/build/test"],
+    #         collect_recursively=False
+    #     ),
+    #     "benchmark",
+    #     result_directory
+    # )
+    # # OpenCC
+    # inspect_executables_for_repository(
+    #     inspector_exec,
+    #     collect_executables_from_directories(
+    #         ["./repos/c++/OpenCC/build/dbg/src"],
+    #         collect_recursively=False,
+    #         accepted_substrings=["Test"]
+    #     ),
+    #     "OpenCC",
+    #     result_directory
+    # )
+    # # glog
+    # inspect_executables_for_repository(
+    #     inspector_exec,
+    #     collect_executables_from_directories(
+    #         ["./repos/c++/glog/build"],
+    #         collect_recursively=False,
+    #         accepted_substrings=["test"]
+    #     ),
+    #     "glog",
+    #     result_directory
+    # )
+    # # snappy - not suitable
+    # inspect_executables_for_repository(
+    #     inspector_exec,
+    #     ["./repos/c++/snappy/build/snappy_unittest"],
+    #     "snappy",
+    #     result_directory
+    # )
+    # # yaml-cpp
+    # inspect_executables_for_repository(
+    #     inspector_exec,
+    #     ["./repos/c++/yaml-cpp/build/test/yaml-cpp-tests"],
+    #     "yaml-cpp",
+    #     result_directory
+    # )
+    # # magic_enum
+    # inspect_executables_for_repository(
+    #     inspector_exec,
+    #     collect_executables_from_directories(
+    #         ["./repos/c++/magic_enum/build/test",
+    #          "./repos/c++/magic_enum/build/example"],
+    #         collect_recursively=False
+    #     ),
+    #     "magic_enum",
+    #     result_directory
+    # )
+    #
+    # # openssl
+    # inspect_executables_for_repository(
+    #     inspector_exec,
+    #     collect_executables_from_directories(
+    #         ["./repos/c/openssl/test"],
+    #         skip=["./repos/c/openssl/test/ecstresstest", "./repos/c/openssl/test/bio_prefix_text"], #  timeout
+    #     ),
+    #     "openssl",
+    #     result_directory
+    # )
+    # # dynamorio
+    # inspect_executables_for_repository(
+    #     inspector_exec,
+    #     collect_executables_from_directories(
+    #         ["./repos/c/dynamorio/build/suite/tests/bin/"],
+    #         ignored_substrings=[".debug"]
+    #     ),
+    #     "dynamorio",
+    #     result_directory
+    # )
+    # # jq
+    # inspect_executables_for_repository(
+    #     inspector_exec,
+    #     ["./repos/c/jq/tests/1_run_mantest",
+    #      "./repos/c/jq/tests/1_run_jqtest"],
+    #     "jq",
+    #     result_directory
+    # )
+    # # cJSON
+    # cJSON_execs = collect_executables_from_directories(
+    #     ["./repos/c/cJSON/build/tests"]
+    # )
+    # cJSON_execs.append("./repos/c/cJSON/build/cJSON_test")
+    # inspect_executables_for_repository(
+    #     inspector_exec,
+    #     cJSON_execs,
+    #     "cJSON",
+    #     result_directory
+    # )
+    # # mimalloc
+    # inspect_executables_for_repository(
+    #     inspector_exec,
+    #     ["./repos/c/mimalloc/build/mimalloc-test-api-fill",
+    #      "./repos/c/mimalloc/build/mimalloc-test-api",
+    #      "./repos/c/mimalloc/build/mimalloc-test-stress"],
+    #     "mimalloc",
+    #     result_directory
+    # )
+    # # nanomsg
+    # inspect_executables_for_repository(
+    #     inspector_exec,
+    #     collect_executables_from_directories(
+    #         ["./repos/c/nanomsg/build"],
+    #         collect_recursively=False
+    #     ),
+    #     "nanomsg",
+    #     result_directory
+    # )
     # s2n-tls
-    inspect_executables_for_repository(
-        inspector_exec,
-        collect_executables_from_directories(
-            ["./repos/c/s2n-tls/build/bin"],
-            accepted_substrings=["test"],
-            skip=["./repos/c/s2n-tls/build/bin/s2n_self_talk_client_hello_cb_test",  # infinite test
-                  "./repos/c/s2n-tls/build/bin/s2n_io_test",  # 1800 timeout
-                  "./repos/c/s2n-tls/build/bin/s2n_self_talk_session_id_test",  # infinite test
-                  ]
-        ),
-        "s2n-tls",
-        result_directory
-    )
-    # libuv - 1200 timeout
-    inspect_executables_for_repository(
-        inspector_exec,
-        collect_executables_from_directories(
-            ["./repos/c/libuv/build"],
-            collect_recursively=False
-        ),
-        "libuv",
-        result_directory
-    )
-    # libevent - 1200 timeout
-    inspect_executables_for_repository(
-        inspector_exec,
-        collect_executables_from_directories(
-            ["./repos/c/libevent/build/bin"],
-            skip=["./repos/c/libevent/build/bin/dns-example",
-                  "./repos/c/libevent/build/bin/event-read-fifo",
-                  "./repos/c/libevent/build/bin/hello-world",
-                  "./repos/c/libevent/build/bin/http-connect",
-                  "./repos/c/libevent/build/bin/http-server",
-                  "./repos/c/libevent/build/bin/watch-timing",
-                  "./repos/c/libevent/build/bin/ws-chat-server"
-                  ]
-        ),
-        "libevent",
-        result_directory
-    )
-    # json-c
-    inspect_executables_for_repository(
-        inspector_exec,
-        collect_executables_from_directories(
-            ["./repos/c/json-c/build/tests"],
-            collect_recursively=False
-        ),
-        "json-c",
-        result_directory
-    )
-    # Collections-C
-    inspect_executables_for_repository(
-        inspector_exec,
-        collect_executables_from_directories(
-            ["./repos/c/Collections-C/build/examples", "./repos/c/Collections-C/build/test"],
-            ignored_substrings=["CMakeFiles"],
-        ),
-        "Collections-C",
-        result_directory
-    )
-
-    # fastfetch
-    inspect_executables_for_repository(
-        inspector_exec,
-        ["./repos/c/fastfetch/build/fastfetch",
-         "./repos/c/fastfetch/build/flashfetch"],
-        "fastfetch",
-        result_directory
-    )
-    # zlog
-    inspect_executables_for_repository(
-        inspector_exec,
-        collect_executables_from_directories(
-            ["./repos/c/zlog/build/bin"],
-            skip=["./repos/c/zlog/build/bin/zlog-chk-conf"]
-        ),
-        "zlog",
-        result_directory
-    )
-    # onion
-    inspect_executables_for_repository(
-        inspector_exec,
-        collect_executables_from_directories(
-            ["./repos/c/onion/build/tests/01-internal"],
-            collect_recursively=False
-        ),
-        "onion",
-        result_directory
-    )
-    # cmark
-    inspect_executables_for_repository(
-        inspector_exec,
-        ["./repos/c/cmark/build/api_test/api_test"],
-        "cmark",
-        result_directory
-    )
-    # libsndfile
-    inspect_executables_for_repository(
-        inspector_exec,
-        collect_executables_from_directories(
-            ["./repos/c/libsndfile/build"],
-            collect_recursively=False,
-            accepted_substrings=["test"]
-        ),
-        "libsndfile",
-        result_directory
-    )
-    # zip
-    inspect_executables_for_repository(
-        inspector_exec,
-        collect_executables_from_directories(
-            ["./repos/c/zip/build/test"],
-            collect_recursively=False,
-        ),
-        "zip",
-        result_directory
-    )
+    # inspect_executables_for_repository(
+    #     inspector_exec,
+    #     collect_executables_from_directories(
+    #         ["./repos/c/s2n-tls/build/bin"],
+    #         accepted_substrings=["test"],
+    #         skip=["./repos/c/s2n-tls/build/bin/s2n_self_talk_client_hello_cb_test",  # infinite test
+    #               "./repos/c/s2n-tls/build/bin/s2n_io_test",  # 1800 timeout
+    #               "./repos/c/s2n-tls/build/bin/s2n_self_talk_session_id_test",  # infinite test
+    #               ]
+    #     ),
+    #     "s2n-tls",
+    #     result_directory
+    # )
+    # # json-c
+    # inspect_executables_for_repository(
+    #     inspector_exec,
+    #     collect_executables_from_directories(
+    #         ["./repos/c/json-c/build/tests"],
+    #         collect_recursively=False
+    #     ),
+    #     "json-c",
+    #     result_directory
+    # )
+    # # Collections-C
+    # inspect_executables_for_repository(
+    #     inspector_exec,
+    #     collect_executables_from_directories(
+    #         ["./repos/c/Collections-C/build/examples", "./repos/c/Collections-C/build/test"],
+    #         ignored_substrings=["CMakeFiles"],
+    #     ),
+    #     "Collections-C",
+    #     result_directory
+    # )
+    # # fastfetch
+    # inspect_executables_for_repository(
+    #     inspector_exec,
+    #     ["./repos/c/fastfetch/build/fastfetch",
+    #      "./repos/c/fastfetch/build/flashfetch"],
+    #     "fastfetch",
+    #     result_directory
+    # )
+    # # zlog
+    # inspect_executables_for_repository(
+    #     inspector_exec,
+    #     collect_executables_from_directories(
+    #         ["./repos/c/zlog/build/bin"],
+    #         skip=["./repos/c/zlog/build/bin/zlog-chk-conf"]
+    #     ),
+    #     "zlog",
+    #     result_directory
+    # )
+    # # onion
+    # inspect_executables_for_repository(
+    #     inspector_exec,
+    #     collect_executables_from_directories(
+    #         ["./repos/c/onion/build/tests/01-internal"],
+    #         collect_recursively=False
+    #     ),
+    #     "onion",
+    #     result_directory
+    # )
+    # # cmark
+    # inspect_executables_for_repository(
+    #     inspector_exec,
+    #     ["./repos/c/cmark/build/api_test/api_test"],
+    #     "cmark",
+    #     result_directory
+    # )
+    # # libsndfile
+    # inspect_executables_for_repository(
+    #     inspector_exec,
+    #     collect_executables_from_directories(
+    #         ["./repos/c/libsndfile/build"],
+    #         collect_recursively=False,
+    #         accepted_substrings=["test"]
+    #     ),
+    #     "libsndfile",
+    #     result_directory
+    # )
+    # # zip
+    # inspect_executables_for_repository(
+    #     inspector_exec,
+    #     collect_executables_from_directories(
+    #         ["./repos/c/zip/build/test"],
+    #         collect_recursively=False,
+    #     ),
+    #     "zip",
+    #     result_directory
+    # )
 
     return 0
 

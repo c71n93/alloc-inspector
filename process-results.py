@@ -22,8 +22,10 @@ def is_float(element: any) -> bool:
 def find_avg_and_sum_for_single_result(result_csv_filename):
     data = pandas.read_csv(result_csv_filename, index_col=HEADER[0])
     data_clean = data.drop(["AVERAGE", "SUM"], errors="ignore").apply(pandas.to_numeric, errors="coerce")
-    data.loc["AVERAGE"] = data_clean.mean()
-    data.loc["SUM"] = data_clean.sum()
+    column_to_bool(data_clean, "Status")
+    data_without_errors = data_clean[data_clean["Status"] == True]
+    data.loc["AVERAGE"] = data_without_errors.mean()
+    data.loc["SUM"] = data_without_errors.sum()
     data.to_csv(result_csv_filename)
 
 
@@ -67,25 +69,8 @@ def gather_all_binaries_in_single_result(directory, final_filename, skip=None):
                 final_result = single_result
             else:
                 final_result = pandas.concat([final_result, single_result])
-    for index, row in final_result.iterrows():
-        final_result.loc[index, "Status"] = True if final_result.loc[index, "Status"] == "True" else False
+    column_to_bool(final_result, "Status")
     final_result.sort_values(by=["Status", "Executable"], ascending=False).to_csv(final_filename)
-
-
-# tmp
-def add_status_to_results(directory, skip=None):
-    if skip is None:
-        skip = []
-    for filename in os.listdir(directory):
-        if filename not in skip:
-            abs_path = os.path.join(directory, filename)
-            single_result = pandas.read_csv(abs_path, index_col=HEADER[0])
-            for index, row in single_result.drop(["AVERAGE", "SUM"], errors="ignore").iterrows():
-                if is_float(row["Heap Allocs Fraction"]):
-                    single_result.loc[index, "Status"] = True
-                else:
-                    single_result.loc[index, "Status"] = False
-            single_result.to_csv(abs_path)
 
 
 def combine_c_and_cpp_results(c_res_file, cpp_res_file, res_file):
@@ -96,31 +81,35 @@ def combine_c_and_cpp_results(c_res_file, cpp_res_file, res_file):
     pandas.concat([cpp_dataframe, c_dataframe]).to_csv(res_file)
 
 
+def column_to_bool(dataframe, column_name):
+    for index, row in dataframe.iterrows():
+        dataframe.loc[index, column_name] = True if str(dataframe.loc[index, column_name]) == "True" else False
+    dataframe[column_name] = dataframe[column_name].astype(bool)
+
+
 def main() -> int:
-    skip = ["final-old.csv", "final-c.csv", "final-c++.csv", "summary-c.csv", "summary-c++.csv", "dynamorio.csv"]
+    skip = ["final-old.csv", "final-c.csv", "final-c++.csv", "summary-c.csv", "summary-c++.csv", "s2n-tls-old.csv"]
     find_avg_and_sum_for_all_results_from_directory("./results/c", skip=skip)
     find_avg_and_sum_for_all_results_from_directory("./results/c++", skip=skip)
     gather_final_result_for_directory("./results/c", "final-c.csv", skip=skip)
     gather_final_result_for_directory("./results/c++", "final-c++.csv", skip=skip)
-    add_status_to_results("./results/c", skip)
-    add_status_to_results("./results/c++", skip)
     gather_all_binaries_in_single_result("./results/c", "summary-c.csv", skip=skip)
     gather_all_binaries_in_single_result("./results/c++", "summary-c++.csv", skip=skip)
     # combine_c_and_cpp_results("./results/c/summary-c.csv", "results/c++/summary-c++.csv", "results.csv")
-    result = pandas.read_csv(
-        "./results/c++/summary-c++.csv",
-        index_col=HEADER[0]
-    ).drop(["AVERAGE", "SUM"], errors="ignore")
-    result_no_errors = result[result["Status"] == True]
-    heap_fraction = "Heap Allocs Fraction"
-    heap_allocs = "Heap Allocs"
-    stack_allocs = "Stack Allocs"
-    executable_size = "Executable Size"
-    summary_allocated = "Summary Bytes Allocated"
-    print(result_no_errors[heap_fraction].corr(result_no_errors[summary_allocated]))
-    print(result_no_errors[heap_fraction].corr(result_no_errors[executable_size]))
-    print(result_no_errors[heap_allocs].corr(result_no_errors[executable_size]))
-    print(result_no_errors[stack_allocs].corr(result_no_errors[executable_size]))
+    # result = pandas.read_csv(
+    #     "./results/c++/summary-c++.csv",
+    #     index_col=HEADER[0]
+    # ).drop(["AVERAGE", "SUM"], errors="ignore")
+    # result_no_errors = result[result["Status"] == True]
+    # heap_fraction = "Heap Allocs Fraction"
+    # heap_allocs = "Heap Allocs"
+    # stack_allocs = "Stack Allocs"
+    # executable_size = "Executable Size"
+    # summary_allocated = "Summary Bytes Allocated"
+    # print(result_no_errors[heap_fraction].corr(result_no_errors[summary_allocated]))
+    # print(result_no_errors[heap_fraction].corr(result_no_errors[executable_size]))
+    # print(result_no_errors[heap_allocs].corr(result_no_errors[executable_size]))
+    # print(result_no_errors[stack_allocs].corr(result_no_errors[executable_size]))
     return 0
 
 

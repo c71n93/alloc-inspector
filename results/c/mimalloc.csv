@@ -1,6 +1,6 @@
-Executable,Stack Allocs,Stack Inspector Runs,Heap Allocs,Heap Frees,Summary Bytes Allocated,Average Bytes Per Allocation,Valgrind Runs,Valgrind Error Summary,Stack Allocs Fraction,Heap Allocs Fraction,Executable Size,Elapsed Time,Status
-mimalloc/out/release/mimalloc-test-api-fill,117.0,1.0,3.0,9.0,3072.0,1024.0,1.0,8.0,0.975,0.025,29808.0,5.6060254573822,True
-mimalloc/out/release/mimalloc-test-api,1070.0,1.0,8.0,460.0,67113024.0,8389128.0,1.0,454.0,0.992578849721707,0.0074211502782931,30432.0,13.9310116767883,True
-mimalloc/out/release/mimalloc-test-stress,97788311.0,1.0,27004655.0,27004655.0,1248004368.0,46.2144162923022,1.0,0.0,0.78360434994389,0.21639565005611,25960.0,153.577466249466,True
-AVERAGE,32596499.33333333,1.0,9001555.333333334,9001708.0,438373488.0,2796732.738138764,1.0,154.0,0.917061066555199,0.082938933444801,28733.33333333333,57.704834461212165,
-SUM,97789498.0,3.0,27004666.0,27005124.0,1315120464.0,8390198.214416292,3.0,462.0,2.751183199665597,0.2488168003344031,86200.0,173.1145033836365,0.0
+Executable,Stack Allocs,Stack Inspector Runs,Heap Allocs,Heap Frees,Summary Bytes Allocated,Average Bytes Per Allocation,Valgrind Runs,Valgrind Error Summary,Stack Allocs Fraction,Heap Allocs Fraction,Executable Size,Elapsed Time,Status,Reason
+./repos/c/mimalloc/build/mimalloc-test-api-fill,92.0,1.0,3.0,9.0,3072.0,1024.0,1.0,8.0,0.9684210526315788,0.031578947368421,20728.0,13.130762338638306,0.0,Valgrind errors
+./repos/c/mimalloc/build/mimalloc-test-api,1071.0,1.0,8.0,485.0,67113017.0,8389127.125,1.0,478.0,0.9925857275254863,0.0074142724745134,21352.0,11.699933290481567,0.0,Valgrind errors
+./repos/c/mimalloc/build/mimalloc-test-stress,104582364.0,1.0,27004655.0,27004655.0,1248004368.0,46.2144162923022,1.0,0.0,0.794777211268841,0.2052227887311589,16960.0,183.2713499069214,1.0,
+AVERAGE,,,,,,,,,,,,,,
+SUM,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
