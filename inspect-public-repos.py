@@ -6,7 +6,6 @@ from io import StringIO
 import time
 from common import HEADER
 
-
 SIZE_OF_INSPECTOR_OUT = 10
 
 
@@ -184,13 +183,6 @@ def main() -> int:
         "glog",
         result_directory
     )
-    # snappy - not suitable
-    inspect_executables_for_repository(
-        inspector_exec,
-        ["./repos/c++/snappy/build/snappy_unittest"],
-        "snappy",
-        result_directory
-    )
     # yaml-cpp
     inspect_executables_for_repository(
         inspector_exec,
@@ -215,27 +207,9 @@ def main() -> int:
         inspector_exec,
         collect_executables_from_directories(
             ["./repos/c/openssl/test"],
-            skip=["./repos/c/openssl/test/ecstresstest", "./repos/c/openssl/test/bio_prefix_text"], #  timeout
+            skip=["./repos/c/openssl/test/ecstresstest", "./repos/c/openssl/test/bio_prefix_text"],  # timeout
         ),
         "openssl",
-        result_directory
-    )
-    # dynamorio
-    inspect_executables_for_repository(
-        inspector_exec,
-        collect_executables_from_directories(
-            ["./repos/c/dynamorio/build/suite/tests/bin/"],
-            ignored_substrings=[".debug"]
-        ),
-        "dynamorio",
-        result_directory
-    )
-    # jq
-    inspect_executables_for_repository(
-        inspector_exec,
-        ["./repos/c/jq/tests/1_run_mantest",
-         "./repos/c/jq/tests/1_run_jqtest"],
-        "jq",
         result_directory
     )
     # cJSON

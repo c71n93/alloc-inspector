@@ -23,9 +23,9 @@ def find_avg_and_sum_for_single_result(result_csv_filename):
     data = pandas.read_csv(result_csv_filename, index_col=HEADER[0])
     data_clean = data.drop(["AVERAGE", "SUM"], errors="ignore").drop(columns=["Reason"], errors="ignore")
     column_to_bool(data_clean, "Status")
-    data_without_errors = data_clean[data_clean["Status"] == True]
-    data.loc["AVERAGE"] = data_without_errors.mean()
-    data.loc["SUM"] = data_without_errors.sum()
+    data_without_errors = data_clean[data_clean["Status"] == True].drop(columns=["Status"], errors="ignore")
+    data.loc["AVERAGE", HEADER[1:-2]] = data_without_errors.mean()
+    data.loc["SUM", HEADER[1:-2]] = data_without_errors.sum()
     data.to_csv(result_csv_filename)
 
 
@@ -124,13 +124,13 @@ def find_correlations(result_csv_filename):
 
 def main() -> int:
     skip = ["final-old.csv", "final-c.csv", "final-c++.csv", "summary-c.csv", "summary-c++.csv", "s2n-tls-old.csv"]
-    # find_avg_and_sum_for_all_results_from_directory("./results/c", skip=skip)
-    # find_avg_and_sum_for_all_results_from_directory("./results/c++", skip=skip)
-    # gather_final_result_for_directory("./results/c", "final-c.csv", skip=skip)
-    # gather_final_result_for_directory("./results/c++", "final-c++.csv", skip=skip)
-    # gather_all_binaries_in_single_result("./results/c", "summary-c.csv", skip=skip)
-    # gather_all_binaries_in_single_result("./results/c++", "summary-c++.csv", skip=skip)
-    # combine_c_and_cpp_results("./results/c/summary-c.csv", "results/c++/summary-c++.csv", "results.csv")
+    find_avg_and_sum_for_all_results_from_directory("./results/c", skip=skip)
+    find_avg_and_sum_for_all_results_from_directory("./results/c++", skip=skip)
+    gather_final_result_for_directory("./results/c", "final-c.csv", skip=skip)
+    gather_final_result_for_directory("./results/c++", "final-c++.csv", skip=skip)
+    gather_all_binaries_in_single_result("./results/c", "summary-c.csv", skip=skip)
+    gather_all_binaries_in_single_result("./results/c++", "summary-c++.csv", skip=skip)
+    combine_c_and_cpp_results("./results/c/summary-c.csv", "results/c++/summary-c++.csv", "results.csv")
 
     find_correlations("results/c/summary-c.csv")
     find_correlations("results/c++/summary-c++.csv")
