@@ -1,5 +1,0 @@
-Executable,Stack Allocs,Stack Inspector Runs,Heap Allocs,Heap Frees,Summary Bytes Allocated,Average Bytes Per Allocation,Valgrind Runs,Valgrind Error Summary,Stack Allocs Fraction,Heap Allocs Fraction,Executable Size,Elapsed Time,Status,Reason
-jq/tests/1_run_mantest,68587635.0,2.0,1641292.0,1641286.0,227136459.0,138.38881746819,2.0,0.0,0.976629402297432,0.0233705977025678,24944.0,15.3921084403992,False,Not executable test
-jq/tests/1_run_jqtest,138214326.0,2.0,3277784.0,3277783.0,455643204.0,139.009527168355,2.0,0.0,0.976834157042396,0.0231658429576038,24944.0,21.5907537937164,False,Not executable test
-AVERAGE,,,,,,,,,,,,,,
-SUM,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
