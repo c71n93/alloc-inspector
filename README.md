@@ -38,16 +38,14 @@ $ ctest
 This tool will show number of stack allocations in your executable:
 ```console
 $ inspector/build/stack-inspector/stack_inspector_exec <some-executable>
-```
-```out
+
 TODO
 ```
 #### `alloc_inspector`
 This tool will run `stack_inspector` and `valgrind` to show summary information about stack and heap allocations:
 ```console
 $ inspector/build/stack-inspector/stack_inspector_exec <some-executable>
-```
-```out
+
 TODO
 ```
 

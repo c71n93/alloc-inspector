@@ -1,5 +1,3 @@
-Executable,Stack Allocs,Stack Inspector Runs,Heap Allocs,Heap Frees,Summary Bytes Allocated,Average Bytes Per Allocation,Valgrind Runs,Valgrind Error Summary,Stack Allocs Fraction,Heap Allocs Fraction,Executable Size,Elapsed Time,Status
-spdlog/build/tests/spdlog-utests,4088628.0,33.0,181729.0,181729.0,18462694.0,101.594649175421,33.0,0.0,0.95744407317702,0.0425559268229799,2558728.0,61.25825548172,True
-spdlog/build/example/example,102493.0,1.0,17088.0,17088.0,4259331.0,249.25860252809,1.0,0.0,0.85710104448031,0.14289895551969,688248.0,2.41427111625671,True
-AVERAGE,2095560.5,17.0,99408.5,99408.5,11361012.5,175.4266258517555,17.0,0.0,0.907272558828665,0.09272744117133495,1623488.0,31.836263298988353,1.0
-SUM,4191121.0,34.0,198817.0,198817.0,22722025.0,350.853251703511,34.0,0.0,1.81454511765733,0.1854548823426699,3246976.0,63.672526597976706,2.0
+Executable,Stack Allocs,Stack Inspector Runs,Heap Allocs,Heap Frees,Summary Bytes Allocated,Average Bytes Per Allocation,Valgrind Runs,Valgrind Error Summary,Stack Allocs Fraction,Heap Allocs Fraction,Executable Size,Elapsed Time,Status,Reason
+./repos/c++/spdlog/build/tests/spdlog-utests,4311246,65,172985,170261,18468113,106.76135503078302,65,0,0.96142370899269014,0.038576291007309839,2745384,71.11652302742004,True
+./repos/c++/spdlog/build/example/example,105853,1,17088,17088,4259331,249.25860252808988,1,0,0.86100649905239102,0.13899350094760901,731152,1.6606335639953613,True
