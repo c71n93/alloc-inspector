@@ -1,4 +1,2 @@
-Executable,Stack Allocs,Stack Inspector Runs,Heap Allocs,Heap Frees,Summary Bytes Allocated,Average Bytes Per Allocation,Valgrind Runs,Valgrind Error Summary,Stack Allocs Fraction,Heap Allocs Fraction,Executable Size,Elapsed Time,Status
-./repos/c++/MyTinySTL/bin/stltest,1986595599.0,1.0,154933799.0,117152342.0,1166258636.0,7.527464268787471,1.0,0.0,0.9276527330679212,0.0723472669320787,823256.0,1429.819373369217,True
-AVERAGE,1986595599.0,1.0,154933799.0,117152342.0,1166258636.0,7.527464268787471,1.0,0.0,0.9276527330679212,0.0723472669320787,823256.0,1429.819373369217,1.0
-SUM,1986595599.0,1.0,154933799.0,117152342.0,1166258636.0,7.527464268787471,1.0,0.0,0.9276527330679212,0.0723472669320787,823256.0,1429.819373369217,1.0
+Executable,Stack Allocs,Stack Inspector Runs,Heap Allocs,Heap Frees,Summary Bytes Allocated,Average Bytes Per Allocation,Valgrind Runs,Valgrind Error Summary,Stack Allocs Fraction,Heap Allocs Fraction,Executable Size,Elapsed Time,Status,Reason
+./repos/c++/MyTinySTL/bin/stltest,1966007782,1,154933799,117152493,1166258636,7.5274642687874707,1,0,0.92695046370539336,0.073049536294606698,862672,992.4689745903015,True
