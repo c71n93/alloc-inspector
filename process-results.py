@@ -1,7 +1,9 @@
 import os
 import sys
 import pandas
+import matplotlib.pyplot as plt
 from common import HEADER
+
 
 result_header = [
     "Repository Name", "Num Of Executables", "AVG Heap Allocs Fraction", "AVG Stack Allocs", "SUM Stack Allocs",
@@ -22,10 +24,9 @@ def is_float(element: any) -> bool:
 def find_avg_and_sum_for_single_result(result_csv_filename):
     data = pandas.read_csv(result_csv_filename, index_col=HEADER[0])
     data_clean = data.drop(["AVERAGE", "SUM"], errors="ignore").drop(columns=["Reason"], errors="ignore")
-    column_to_bool(data_clean, "Status")
-    data_without_errors = data_clean[data_clean["Status"] == True].drop(columns=["Status"], errors="ignore")
-    data.loc["AVERAGE", HEADER[1:-2]] = data_without_errors.mean()
-    data.loc["SUM", HEADER[1:-2]] = data_without_errors.sum()
+    data_without_errors = filter_errors(data_clean)
+    data.loc["AVERAGE"] = data_without_errors.mean()
+    data.loc["SUM"] = data_without_errors.sum()
     data.to_csv(result_csv_filename)
 
 
@@ -73,10 +74,18 @@ def gather_all_binaries_in_single_result(directory, final_filename, skip=None):
     final_result.sort_values(by=["Status", "Executable"], ascending=False).to_csv(final_filename)
 
 
-def combine_c_and_cpp_results(c_res_file, cpp_res_file, res_file):
+def combine_c_and_cpp_summary_results(c_res_file, cpp_res_file, res_file):
     c_dataframe = pandas.read_csv(c_res_file, index_col=HEADER[0])
     c_dataframe["Language"] = "C"
     cpp_dataframe = pandas.read_csv(cpp_res_file, index_col=HEADER[0])
+    cpp_dataframe["Language"] = "C++"
+    pandas.concat([cpp_dataframe, c_dataframe]).to_csv(res_file)
+
+
+def combine_c_and_cpp_repo_results(c_res_file, cpp_res_file, res_file):
+    c_dataframe = pandas.read_csv(c_res_file, index_col="Repository Name")
+    c_dataframe["Language"] = "C"
+    cpp_dataframe = pandas.read_csv(cpp_res_file, index_col="Repository Name")
     cpp_dataframe["Language"] = "C++"
     pandas.concat([cpp_dataframe, c_dataframe]).to_csv(res_file)
 
@@ -92,8 +101,7 @@ def find_correlations(result_csv_filename):
         result_csv_filename,
         index_col=HEADER[0]
     ).drop(["AVERAGE", "SUM"], errors="ignore")
-    column_to_bool(result, "Status")
-    result_no_errors = result[result["Status"] == True]
+    result_no_errors = filter_errors(result)
     heap_fraction = "Heap Allocs Fraction"
     heap_allocs = "Heap Allocs"
     stack_allocs = "Stack Allocs"
@@ -122,19 +130,80 @@ def find_correlations(result_csv_filename):
     )
 
 
-def main() -> int:
-    skip = ["final-old.csv", "final-c.csv", "final-c++.csv", "summary-c.csv", "summary-c++.csv", "s2n-tls-old.csv"]
-    find_avg_and_sum_for_all_results_from_directory("./results/c", skip=skip)
-    find_avg_and_sum_for_all_results_from_directory("./results/c++", skip=skip)
-    gather_final_result_for_directory("./results/c", "final-c.csv", skip=skip)
-    gather_final_result_for_directory("./results/c++", "final-c++.csv", skip=skip)
-    gather_all_binaries_in_single_result("./results/c", "summary-c.csv", skip=skip)
-    gather_all_binaries_in_single_result("./results/c++", "summary-c++.csv", skip=skip)
-    combine_c_and_cpp_results("./results/c/summary-c.csv", "results/c++/summary-c++.csv", "results.csv")
+def plot_histogram_summary(result_csv_filename, save_to_dir, bins=100, threshold=1):
+    result = pandas.read_csv(
+        result_csv_filename,
+        index_col=HEADER[0]
+    ).drop(["AVERAGE", "SUM"], errors="ignore")
+    result_no_errors = filter_errors(result)
+    heap_allocs_fraction = result_no_errors["Heap Allocs Fraction"].to_numpy()
+    plot_histogram(heap_allocs_fraction, save_to_dir, bins, threshold)
 
-    find_correlations("results/c/summary-c.csv")
-    find_correlations("results/c++/summary-c++.csv")
-    find_correlations("results/results.csv")
+
+def plot_histogram_repos(result_csv_filename, save_to_dir, bins=100, threshold=1):
+    result = pandas.read_csv(
+        result_csv_filename,
+    )
+    heap_allocs_fraction = result["AVG Heap Allocs Fraction"].to_numpy()
+    plot_histogram(heap_allocs_fraction, save_to_dir, bins, threshold)
+
+
+def plot_histogram(data, save_to_dir, bins=100, threshold=1):
+    fig, ax = plt.subplots()
+    fig.set_size_inches(12, 8)
+    ax.set_xlabel('Value')
+    ax.set_ylabel('Number Of Executables')
+    ax.set_title(f"Histogram of Heap Allocations Fraction. Number of bins={bins}. Values are less than threshold={threshold}")
+    ax.hist(data[data < threshold], bins)
+    plt.savefig(save_to_dir + f"/bins{bins}-threshold{threshold}.png")
+    plt.clf()
+    plt.close(fig)
+
+
+def boxplot(result_csv_filename):
+    result = pandas.read_csv(
+        result_csv_filename,
+        index_col=HEADER[0]
+    ).drop(["AVERAGE", "SUM"], errors="ignore")
+    result_no_errors = filter_errors(result)
+    heap_allocs_fraction = result_no_errors["Heap Allocs Fraction"].to_numpy()
+    plt.boxplot(heap_allocs_fraction)
+    plt.show()
+
+
+def filter_errors(dataframe):
+    column_to_bool(dataframe, "Status")
+    return dataframe[dataframe["Status"] == True]
+
+
+def main() -> int:
+    skip = ["final-old.csv", "repo-summary-c.csv", "repo-summary-c++.csv", "summary-c.csv", "summary-c++.csv", "s2n-tls-old.csv"]
+    # find_avg_and_sum_for_all_results_from_directory("./results/c", skip=skip)
+    # find_avg_and_sum_for_all_results_from_directory("./results/c++", skip=skip)
+    # gather_final_result_for_directory("./results/c", "repo-summary-c.csv", skip=skip)
+    # gather_final_result_for_directory("./results/c++", "repo-summary-c++.csv", skip=skip)
+    # gather_all_binaries_in_single_result("./results/c", "summary-c.csv", skip=skip)
+    # gather_all_binaries_in_single_result("./results/c++", "summary-c++.csv", skip=skip)
+    # combine_c_and_cpp_results("./results/c/summary-c.csv", "results/c++/summary-c++.csv", "results.csv")
+    # combine_c_and_cpp_repo_results("./results/c/repo-summary-c.csv", "results/c++/repo-summary-c++.csv", "repo-results.csv")
+
+    # find_correlations("results/c/summary-c.csv")
+    # find_correlations("results/c++/summary-c++.csv")
+    # find_correlations("results/results.csv")
+
+    # for bins in [10, 50, 100, 150, 200]:
+    #     for threshold in [1, 0.2, 0.15, 0.1, 0.05]:
+    #         plot_histogram("results/c/summary-c.csv", "/Users/c71n93/Desktop/histograms/C", bins, threshold)
+    #         plot_histogram("results/c++/summary-c++.csv", "/Users/c71n93/Desktop/histograms/C++", bins, threshold)
+    #         plot_histogram("results/results.csv", "/Users/c71n93/Desktop/histograms/Both", bins, threshold)
+
+    # boxplot("results/c/summary-c.csv")
+    # boxplot("results/c++/summary-c++.csv")
+    # boxplot("results/results.csv")
+
+    # plot_histogram_repos("results/c/repo-summary-c.csv", "/Users/c71n93/Desktop/hist/c", 10)
+    # plot_histogram_repos("results/c++/repo-summary-c++.csv", "/Users/c71n93/Desktop/hist/c++", 10)
+    # plot_histogram_repos("results/repo-results.csv", "/Users/c71n93/Desktop/hist/both", 6)
 
     return 0
 
