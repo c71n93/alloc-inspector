@@ -63,6 +63,11 @@ Results can be found in [./results](./results) in csv format.
 
 ### Inspected Repositories
 
+To reproduce the results, you need to clone projects into the `./repos/c` and `./repos/c++` directories for C and C++
+projects respectfully. At the next step projects should be built according to the README for each project (use build 
+with tests). Finally, [inspect-public-repos.py](./inspect-public-repos.py) can be run to collect results in CSV format
+for every repository.
+
 #### C
 | Repository                                              | Commit                                   |
 |---------------------------------------------------------|------------------------------------------|
@@ -93,7 +98,6 @@ Results can be found in [./results](./results) in csv format.
 | [OpenCC](https://github.com/BYVoid/OpenCC)          | e5d6c5f1b78e28a5797e7ad3ede3513314e544b7 |
 | [spdlog](https://github.com/gabime/spdlog)          | a2b4262090fd3f005c2315dcb5be2f0f1774a005 |
 | [yaml-cpp](https://github.com/jbeder/yaml-cpp)      | 76dc6715734295ff1866bfc32872ff2278258fc8 |
-
 
 ## Acknowledgements
 [`stack-inspector`](./inspector/stack-inspector) approach was inspired by 
