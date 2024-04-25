@@ -59,7 +59,22 @@ binaries:
 
 ## Results
 
-Results can be found in [./results](./results) in csv format.
+Results can be found in [./results](./results) in csv format. The columns in these files mean the following:
+- Executable - path to inspected executable.
+- Stack Allocs - number of total stack allocations.
+- Stack Inspector Runs - number of stack inspector launches (for an executables with several processes)
+- Heap Allocs - number of total heap allocation.
+- Heap Frees - number of total heap frees.
+- Summary Bytes Allocated - summary bytes allocated on heap
+- Average Bytes Per Allocation - average bytes allocated per single heap allocation
+- Valgrind Runs - number of valgrind launches (for an executables with several processes)
+- Valgrind Error Summary - total number of errors detected by valgrind
+- Stack Allocs Fraction - fraction of allocations occurred on the stack
+- Heap Allocs Fraction - fraction of allocations occurred on the heap
+- Executable Size - size of executable
+- Elapsed Time - time spent on profiling the executable file
+- Status - `True` if result is appropriate and `False` otherwise.
+- Reason - the reason why the executable file is inappropriate, if so
 
 ### Inspected Repositories
 
