@@ -1,0 +1,3 @@
+[submodule "inspector/third-party/cpp-subprocess"]
+	path = inspector/third-party/cpp-subprocess
+	url = git@github.com:arun11299/cpp-subprocess.git
