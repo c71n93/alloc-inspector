@@ -1,8 +1,9 @@
 #include <iostream>
-#include "utils.hpp"
-#include "parsers.hpp"
-#include "subprocess.hpp"
 #include <csignal>
+#include "util.hpp"
+#include "subprocess.hpp"
+#include "stack-inspector-launcher.hpp"
+#include "valgrind-launcher.hpp"
 
 enum ret_code {
     STACK_INSPECTOR_TIMEOUT = 1,
@@ -12,10 +13,13 @@ enum ret_code {
 };
 
 namespace sp = subprocess;
-using inspector::utils::string_format;
-using inspector::parser::parsed_inspectors_output;
+using namespace inspector;
+using util::stringFormat;
+using stack_inspector::StackInspectorLauncher;
+using valgrind::ValgrindLauncher;
 
-int main(int argc, char* argv[]) {
+// TODO: add tests
+int main(int argc, char *argv[]) {
     if (argc != 2) {
         std::cerr << "error: wrong argument number: executable file is required" << std::endl;
         return 0;
@@ -24,57 +28,38 @@ int main(int argc, char* argv[]) {
     // TODO: add possibility to pass "-csv_result" flag as an argument
     bool csv_result = true;
     // TODO: add possibility to pass timelimit in seconds
-    int timelimit = 100;
-    auto stack_inspector_process = sp::Popen(
-        string_format(
-            "timeout --signal=SIGKILL %d %s %s",
-            timelimit,
-            STACK_INSPECTOR_EXEC,
-            executable.c_str()
-       ),
-       sp::output{sp::PIPE}
-    );
-    std::string stack_inspector_output{stack_inspector_process.communicate().first.buf.data()};
-    int stack_inspector_retcode = stack_inspector_process.retcode();
-    if (stack_inspector_retcode == SIGKILL) {
-        std::cerr << "stack_inspector is killed due to exceeding the time limit of "
-                  << timelimit << "s" << std::endl;
-        return ret_code::STACK_INSPECTOR_TIMEOUT;
-    }
-    // TODO: add possibility to pass --multiprocess to enable --trace-children=yes if needed
-    auto valgrind_process = sp::Popen(
-        string_format(
-            "timeout --signal=SIGKILL %d valgrind --trace-children=yes %s",
-            timelimit,
-            executable.c_str()
-        ),
-        sp::error{sp::PIPE}
-    );
-    std::string valgrind_output{valgrind_process.communicate().second.buf.data()};
-    auto valgrind_retcode = valgrind_process.retcode();
-    if (valgrind_retcode == SIGKILL) {
-        std::cerr << "valgrind is killed due to exceeding the time limit of "
-                  << timelimit << "s" << std::endl;
-        return ret_code::VALGRIND_TIMEOUT;
-    }
+    size_t timelimit = 100;
     try {
-        parsed_inspectors_output::inspectors_result result = parsed_inspectors_output(
-                stack_inspector_output,
-                valgrind_output
-        ).take();
+        results::InspectorResults result{
+            StackInspectorLauncher{
+                timelimit,
+                STACK_INSPECTOR_EXEC,
+                executable
+            }.launchWithResults(),
+            ValgrindLauncher{
+                timelimit,
+                executable
+            }.launchWithResults()
+        };
         if (csv_result) {
             std::cout << result.as_csv() << std::endl;
         } else {
             std::cout << result << std::endl;
         }
-    } catch (const inspector::parser::stack_inspector_out_format_error& e) {
+    } catch (const stack_inspector::stack_inspector_timeout_error& e) {
+        std::cerr << "error: stack_inspector timeout:\n"
+                  << "the error was caused by:\n" << e.what() << std::endl;
+        return ret_code::STACK_INSPECTOR_TIMEOUT;
+    } catch (const valgrind::valgrind_timeout_error& e) {
+        std::cerr << "error: valgrind timeout:\n"
+                  << "the error was caused by:\n" << e.what() << std::endl;
+        return ret_code::VALGRIND_TIMEOUT;
+    } catch (const stack_inspector::stack_inspector_out_format_error& e) {
         std::cerr << "error: unexpected output from stack_inspector:\n"
-                  << stack_inspector_output << "\n"
                   << "the error was caused by:\n" << e.what() << std::endl;
         return ret_code::STACK_INSPECTOR_PARSING_ERROR;
-    } catch (const inspector::parser::valgrind_out_format_error& e) {
+    } catch (const valgrind::valgrind_out_format_error& e) {
         std::cerr << "error: unexpected output from valgrind:\n"
-                  << valgrind_output << "\n"
                   << "the error was caused by:\n" << e.what() << std::endl;
         return ret_code::VALGRIND_PARSING_ERROR;
     }
