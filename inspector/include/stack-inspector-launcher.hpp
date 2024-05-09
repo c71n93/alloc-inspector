@@ -91,8 +91,14 @@ private:
 
 class StackInspectorLauncher final {
 public:
-    StackInspectorLauncher(size_t timelimit, const std::string &stack_inspector_exec, const std::string &executable)
-        : timelimit_(timelimit), stack_inspector_exec_(stack_inspector_exec), executable_(executable) {}
+    StackInspectorLauncher(
+        size_t timelimit,
+        const std::string &drrun_exec,
+        const std::string& stack_inspector_lib,
+        const std::string &executable
+    )
+        : timelimit_(timelimit), drrun_exec_(drrun_exec), stack_inspector_lib_(stack_inspector_lib),
+        executable_(executable) {}
 
     const StackInspectorResults &getResults() const {
         return results_;
@@ -104,11 +110,18 @@ public:
 
 private:
     std::string runStackInspector() {
+        // TODO: add possibility to pass "-only_from_app" flag as an argument
+        std::cout << util::stringFormat(
+            "%s -c %s -only_from_app -- %s",
+            drrun_exec_.c_str(),
+            stack_inspector_lib_.c_str(),
+            executable_.c_str()
+        ) << std::endl;
         auto stack_inspector_process = sp::Popen(
             util::stringFormat(
-                "timeout --signal=SIGKILL %d %s %s",
-                timelimit_,
-                stack_inspector_exec_.c_str(),
+                "%s -c %s -only_from_app -- %s",
+                drrun_exec_.c_str(),
+                stack_inspector_lib_.c_str(),
                 executable_.c_str()
             ),
             sp::output{sp::PIPE}
@@ -128,7 +141,8 @@ private:
 
 private:
     size_t timelimit_;
-    std::string stack_inspector_exec_;
+    std::string drrun_exec_;
+    std::string stack_inspector_lib_;
     std::string executable_;
     StackInspectorResults results_{0, 0};
 };

@@ -1,5 +1,4 @@
 #include <iostream>
-#include <csignal>
 #include "util.hpp"
 #include "subprocess.hpp"
 #include "stack-inspector-launcher.hpp"
@@ -26,14 +25,15 @@ int main(int argc, char *argv[]) {
     }
     std::string executable = std::string(argv[1]);
     // TODO: add possibility to pass "-csv_result" flag as an argument
-    bool csv_result = true;
+    bool csv_result = false;
     // TODO: add possibility to pass timelimit in seconds
     size_t timelimit = 100;
     try {
         results::InspectorResults result{
             StackInspectorLauncher{
                 timelimit,
-                STACK_INSPECTOR_EXEC,
+                DRRUN_EXECUTABLE,
+                STACK_INSPECTOR,
                 executable
             }.launchWithResults(),
             ValgrindLauncher{

@@ -102,9 +102,14 @@ private:
         static_cast<double>(stack_inspector_.stack_allocs() + valgrind_.heap_allocs());
 };
 
+std::ostream& operator<<(std::ostream& os, const StackInspectorResults& res) {
+    os << "stack allocations: " << res.stack_allocs() << "\n"
+       << "stack_inspector runs: " << res.num_of_processes();
+    return os;
+}
+
 std::ostream& operator<<(std::ostream& os, const InspectorResults& res) {
-    os << "stack allocations: " << res.stack_inspector().stack_allocs() << "\n"
-       << "stack_inspector runs: " << res.stack_inspector().num_of_processes()
+    os << res.stack_inspector() << "\n"
        << "heap allocations: " << res.valgrind().heap_allocs() << "\n"
        << "heap frees: " << res.valgrind().heap_frees() << "\n"
        << "heap bytes allocated: " << res.valgrind().heap_memory() << "\n"

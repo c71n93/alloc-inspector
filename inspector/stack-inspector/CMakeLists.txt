@@ -1,4 +1,4 @@
-add_library(stack_inspector SHARED src/stack_inspector.cpp)
+add_library(stack_inspector SHARED src/stack-inspector.cpp)
 if(NOT DEFINED DYNAMORIO_HOME)
     if(DEFINED ENV{DYNAMORIO_HOME})
         set(DYNAMORIO_HOME $ENV{DYNAMORIO_HOME})
@@ -19,14 +19,8 @@ endif(NOT DynamoRIO_FOUND)
 use_DynamoRIO_extension(stack_inspector drmgr)
 use_DynamoRIO_extension(stack_inspector droption)
 configure_DynamoRIO_client(stack_inspector)
+
 set(DRRUN_EXECUTABLE ${DYNAMORIO_HOME}/bin64/drrun)
-
-add_executable(stack_inspector_exec src/main.cpp)
-add_dependencies(stack_inspector_exec stack_inspector)
-
-target_compile_definitions(stack_inspector_exec
-    PUBLIC DRRUN_EXECUTABLE="${DRRUN_EXECUTABLE}"
-    PUBLIC STACK_INSPECTOR="$<TARGET_FILE:stack_inspector>"
-)
+set(STACK_INSPECTOR $<TARGET_FILE:stack_inspector>)
 
 add_subdirectory(test)
